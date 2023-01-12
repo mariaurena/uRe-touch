@@ -7,23 +7,27 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-
     <Button
-        android:id="@+id/botonCamara"
+        android:id="@+id/botonAtras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/botonCamara" />
-
-    <Button
-        android:id="@+id/botonGaleria"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/botonGaleria" />
+        android:text="Atras" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/muestraImagen"
+        android:layout_width="427dp"
+        android:layout_height="489dp" />
+
+    <Button
+        android:id="@+id/botonSi"
         android:layout_width="match_parent"
-        android:layout_height="331dp" />
+        android:layout_height="wrap_content"
+        android:text="SI" />
+
+    <Button
+        android:id="@+id/botonNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NO" />
+
 </LinearLayout>

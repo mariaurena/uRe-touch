@@ -4,26 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
     android:orientation="vertical">
 
-
     <Button
-        android:id="@+id/botonCamara"
+        android:id="@+id/botonAtras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/botonCamara" />
-
-    <Button
-        android:id="@+id/botonGaleria"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/botonGaleria" />
+        android:text="ATRAS" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="331dp" />
+        android:layout_width="427dp"
+        android:layout_height="594dp" />
+
+
+
 </LinearLayout>

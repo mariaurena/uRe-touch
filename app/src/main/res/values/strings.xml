@@ -6,7 +6,11 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="botonCamara">Elegir de la camara</string>
+    <string name="botonGaleria">Elegir de la galeria</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_prueba">Prueba</string>
+    <string name="title_activity_editar_foto">EditarFoto</string>
 </resources>
