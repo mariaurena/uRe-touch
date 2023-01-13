@@ -24,7 +24,7 @@ import java.io.FileInputStream;
 public class EditarFoto extends Activity {
 
     ImageView imgView;
-    String filename = null, rutaImagen = null;
+    String imagenGaleria = null, imagenCamara = null;
     Bitmap imageBitMap;
     Button botonAtras;
 
@@ -36,18 +36,18 @@ public class EditarFoto extends Activity {
         imgView = findViewById(R.id.imageView);
 
         Bundle bundle = getIntent().getExtras();
-        rutaImagen = bundle.getString("bundleRuta");
-        filename   = bundle.getString("bundleFileName");
+        imagenCamara  = bundle.getString("bundleRuta");
+        imagenGaleria = bundle.getString("bundleFileName");
 
-        if (rutaImagen != null){
+        if (imagenCamara != null){
             // Obtenemos la imagen almacenada en imagenes_capturadas
-            Bitmap imgBitmap = BitmapFactory.decodeFile(rutaImagen);
+            Bitmap imgBitmap = BitmapFactory.decodeFile(imagenCamara);
             imgView.setImageBitmap(imgBitmap);
         }
-        else if (filename != null){
+        else if (imagenGaleria != null){
             // descargamos de disco la imagen (filename)
             try {
-                FileInputStream is = this.openFileInput(filename);
+                FileInputStream is = this.openFileInput(imagenGaleria);
                 imageBitMap = BitmapFactory.decodeStream(is);
                 is.close();
             } catch (Exception e) {
@@ -64,11 +64,11 @@ public class EditarFoto extends Activity {
                 Intent intent = new Intent(view.getContext(), ShowImage.class);
                 // necesario usar 'bundle' para que funcione
                 Bundle bundle = new Bundle();
-                // imagen cámara
-                bundle.putString("bundleRuta",rutaImagen);
-                // imagen galeria
-                bundle.putString("bundleFileName",filename);
+
+                bundle.putString("bundleRuta",imagenCamara);
+                bundle.putString("bundleFileName",imagenGaleria);
                 intent.putExtras(bundle);
+
                 startActivity(intent);
             }
         });

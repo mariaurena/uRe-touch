@@ -22,10 +22,10 @@ import java.io.FileInputStream;
 
 public class ShowImage extends Activity {
     ImageView imgView;
-    String rutaImagen;
+    String imagenCamara;
     Button botonNo,botonSi,botonAtras;
     Bitmap imageBitMap = null;
-    String filename;
+    String imagenGaleria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,21 +47,21 @@ public class ShowImage extends Activity {
         botonSi = findViewById(R.id.botonSi);
 
         Bundle bundle = getIntent().getExtras();
-        rutaImagen = bundle.getString("bundleRuta");
-        filename   = bundle.getString("bundleFileName");
+        imagenCamara  = bundle.getString("bundleRuta");
+        imagenGaleria = bundle.getString("bundleFileName");
 
-        // imagen cámara
-        if (rutaImagen != null){
+        // cámara
+        if (imagenCamara != null){
             // Obtenemos la imagen almacenada en imagenes_capturadas
-            Bitmap imgBitmap = BitmapFactory.decodeFile(rutaImagen);
+            Bitmap imgBitmap = BitmapFactory.decodeFile(imagenCamara);
             imgView.setImageBitmap(imgBitmap);
 
         }
-        // imagen galeria
-        else if (filename != null){
+        // galeria
+        else if (imagenGaleria != null){
             // descargamos de disco la imagen (filename)
             try {
-                FileInputStream is = this.openFileInput(filename);
+                FileInputStream is = this.openFileInput(imagenGaleria);
                 imageBitMap = BitmapFactory.decodeStream(is);
                 is.close();
             } catch (Exception e) {
@@ -77,9 +77,9 @@ public class ShowImage extends Activity {
                 // necesario usar 'bundle' para que funcione
                 Bundle bundle = new Bundle();
                 // imagen cámara
-                bundle.putString("bundleRuta",rutaImagen);
+                bundle.putString("bundleRuta",imagenCamara);
                 // imagen galeria
-                bundle.putString("bundleFileName",filename);
+                bundle.putString("bundleFileName",imagenGaleria);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

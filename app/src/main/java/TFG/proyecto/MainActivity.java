@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            // guardamos en disco el bitmap (filename)
+            // guardamos en disco el bitmap (imagenGaleria)
             try{
                 String imagenGaleria = "bitmap.png";
                 FileOutputStream stream = this.openFileOutput(imagenGaleria, Context.MODE_PRIVATE);
