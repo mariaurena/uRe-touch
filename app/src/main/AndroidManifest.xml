@@ -6,15 +6,16 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
-    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" /> <!-- Para los permisos de la galeria -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"></uses-permission>
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -57,7 +58,7 @@
         </activity>
         <activity
             android:name=".ShowImage"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
