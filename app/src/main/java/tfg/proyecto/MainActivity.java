@@ -1,39 +1,26 @@
-package TFG.proyecto;
+package tfg.proyecto;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilePermission;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -84,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (imagenArchivo != null){
-            Uri fotoUri = FileProvider.getUriForFile(this, "TFG.proyecto.fileprovider", imagenArchivo);
+            Uri fotoUri = FileProvider.getUriForFile(this, "tfg.proyecto.fileprovider", imagenArchivo);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,fotoUri);
             startActivityForResult(intent,1);
         }

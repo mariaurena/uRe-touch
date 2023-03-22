@@ -1,40 +1,24 @@
-package TFG.proyecto;
+package tfg.proyecto;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.mayank.simplecropview.CropImageView;
-import com.mayank.simplecropview.callback.CropCallback;
-import com.mayank.simplecropview.callback.LoadCallback;
-import com.mayank.simplecropview.callback.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import jp.co.cyberagent.android.gpuimage.GPUImage;
 import jp.co.cyberagent.android.gpuimage.GPUImageView;
 
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageExposureFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageContrastFilter;
-import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilterGroup;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageHighlightShadowFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageBrightnessFilter;
@@ -144,9 +128,6 @@ public class EditarFoto extends Activity {
                 // imagen galeria
                 intent.putExtras(bundle);
                 startActivity(intent);
-
-
-
             }
         });
 

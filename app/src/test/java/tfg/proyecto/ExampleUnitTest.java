@@ -1,4 +1,4 @@
-package TFG.proyecto;
+package tfg.proyecto;
 
 import org.junit.Test;
 

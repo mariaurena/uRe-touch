@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecortarImagen"
-    android:orientation="vertical">
+    tools:context="tfg.proyecto.MainActivity"
+    android:orientation="vertical"
+    android:exported="true">
 
     <Button
         android:id="@+id/botonAtras"
@@ -18,25 +19,18 @@
         android:layout_height="wrap_content">
 
         <com.mayank.simplecropview.CropImageView
-            xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/cropImageView"
+            android:layout_width="220dp"
+            android:layout_height="200dp"
             android:layout_weight="1"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            custom:scv_crop_mode="fit_image"
-            custom:scv_handle_size="14dp"
-            custom:scv_touch_padding="8dp"
-            custom:scv_handle_show_mode="show_always"
-            custom:scv_guide_show_mode="show_always"
-            custom:scv_min_frame_size="50dp"
-            custom:scv_frame_stroke_weight="1dp"
-            custom:scv_guide_stroke_weight="1dp"/>
+            app:cropAspectRatioX="1"
+            app:cropAspectRatioY="1"
+            app:cropShape="oval" />
     </LinearLayout>
 
-
+    <ImageView
+        android:id="@+id/imagenRecortada"
+        android:layout_width="427dp"
+        android:layout_height="374dp" />
 
 </LinearLayout>

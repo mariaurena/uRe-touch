@@ -6,7 +6,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "TFG.proyecto"
+        applicationId "tfg.proyecto"
         minSdk 21
         targetSdk 32
         versionCode 1
@@ -51,4 +51,7 @@ dependencies {
     implementation 'com.github.hgayan7:FilterLibrary:0.1.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.1.0'
     implementation 'com.mayank:simplecropview:1.0.0'
+    implementation 'com.github.yalantis:ucrop:2.2.6'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'com.github.yalantis:ucrop:2.2.6'
 }
