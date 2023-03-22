@@ -69,11 +69,10 @@ public class RecortarImagen extends AppCompatActivity {
     private RectF mFrameRect = null;
     private Uri   mSourceUri = null;
 
-    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 321;
 
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
+
     String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME;
 
     Uri uriARecortar;
