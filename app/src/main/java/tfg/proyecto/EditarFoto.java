@@ -117,7 +117,6 @@ public class EditarFoto extends Activity {
         textViewTono.setText("0");
         textViewNit .setText("0");
 
-
         botonRecortar = findViewById(R.id.botonRecortar);
         // para escuchar en el momento de presionar el boton de recortar
         botonRecortar.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +131,9 @@ public class EditarFoto extends Activity {
                 }
                 else if (imagenGaleria != null){
                     bundle.putString("bundleFileName",imagenGaleria);
+                }
+                else if (imagenRecortada != null){
+                    bundle.putString("bundleCrop",imagenRecortada);
                 }
                 // imagen galeria
                 intent.putExtras(bundle);
@@ -220,7 +222,6 @@ public class EditarFoto extends Activity {
         });
 
 
-
         // -- sombras --
         ((SeekBar) findViewById(R.id.seekbarSombras)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -262,8 +263,6 @@ public class EditarFoto extends Activity {
 
             }
         });
-
-
 
         // -- brillo --
         ((SeekBar) findViewById(R.id.seekbarBrillo)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -352,31 +351,6 @@ public class EditarFoto extends Activity {
 
 
 
-    }
-
-    public Bitmap getImageBitMap(String texto) throws IOException {
-        File archivoImagen = new File(getFilesDir(),texto);
-        Bitmap a_devolver = null;
-        if(archivoImagen.exists()){
-            Log.e("h","existe");
-            a_devolver = BitmapFactory.decodeFile(texto);
-            Bitmap imagenRedimensionada = Bitmap.createScaledBitmap(a_devolver, 500, 500, false);
-            // La imagen redimensionada se puede utilizar para mostrar la imagen en la pantalla o para cualquier otro propósito.
-        } else {
-            Log.e("l","lo creo");
-            try {
-                if (archivoImagen.createNewFile()) {
-                    // El archivo ha sido creado exitosamente
-                } else {
-                    // El archivo ya existe
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Se produjo un error al crear el archivo
-            }
-            // Si la imagen no existe, se puede mostrar un mensaje de error o realizar alguna otra acción.
-        }
-        return a_devolver;
     }
 
     protected float range(final float percentage, final float start, final float end) {
