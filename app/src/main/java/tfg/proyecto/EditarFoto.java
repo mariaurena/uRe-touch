@@ -4,7 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -12,7 +18,9 @@ import android.widget.TextView;
 
 import com.mayank.simplecropview.CropImageView;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import jp.co.cyberagent.android.gpuimage.GPUImage;
 import jp.co.cyberagent.android.gpuimage.GPUImageView;
@@ -31,6 +39,7 @@ public class EditarFoto extends Activity {
 
     String imagenGaleria = null;
     String imagenCamara  = null;
+    String imagenRecortada  = null;
     Bitmap imageBitMap;
     Button botonAtras;
     Button botonRecortar;
@@ -59,16 +68,15 @@ public class EditarFoto extends Activity {
     float hue        = 90.0f; // tono
     float sharpness  = 0.0f;
 
-    CropImageView mCropView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editar_foto);
 
-        Bundle bundle = getIntent().getExtras();
-        imagenCamara  = bundle.getString("bundleRuta");
-        imagenGaleria = bundle.getString("bundleFileName");
+        Bundle bundle   = getIntent().getExtras();
+        imagenCamara    = bundle.getString("bundleRuta");
+        imagenGaleria   = bundle.getString("bundleFileName");
+        imagenRecortada = bundle.getString("bundleCrop");
 
         gpuImageView       = findViewById(R.id.gpuimageview);
         exposicionSeekBar  = findViewById(R.id.seekbarExposicion);
@@ -146,6 +154,10 @@ public class EditarFoto extends Activity {
                 e.printStackTrace();
             }
             gpuImageView.setImage(imageBitMap);
+        }
+        else if (imagenRecortada != null){
+            Uri myUri = Uri.parse(imagenRecortada);
+            gpuImageView.setImage(myUri);
         }
 
         botonAtras = findViewById(R.id.botonAtras);
@@ -341,6 +353,32 @@ public class EditarFoto extends Activity {
 
 
     }
+
+    public Bitmap getImageBitMap(String texto) throws IOException {
+        File archivoImagen = new File(getFilesDir(),texto);
+        Bitmap a_devolver = null;
+        if(archivoImagen.exists()){
+            Log.e("h","existe");
+            a_devolver = BitmapFactory.decodeFile(texto);
+            Bitmap imagenRedimensionada = Bitmap.createScaledBitmap(a_devolver, 500, 500, false);
+            // La imagen redimensionada se puede utilizar para mostrar la imagen en la pantalla o para cualquier otro propósito.
+        } else {
+            Log.e("l","lo creo");
+            try {
+                if (archivoImagen.createNewFile()) {
+                    // El archivo ha sido creado exitosamente
+                } else {
+                    // El archivo ya existe
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Se produjo un error al crear el archivo
+            }
+            // Si la imagen no existe, se puede mostrar un mensaje de error o realizar alguna otra acción.
+        }
+        return a_devolver;
+    }
+
     protected float range(final float percentage, final float start, final float end) {
         return (end - start) * percentage / 100.0f + start;
     }

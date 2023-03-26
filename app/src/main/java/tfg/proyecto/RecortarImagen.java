@@ -169,6 +169,11 @@ public class RecortarImagen extends AppCompatActivity {
         return uri;
     }
 
+    public Bitmap getImageBitMap(Uri uri) throws IOException {
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+        return bitmap;
+    }
+
     // pedimos permisos de escritura en tiempo de ejecución (necesario a partir de Android 11 API 30)
     public boolean permisos_escritura(){
         // Verificar si se tienen permisos de escritura en el almacenamiento externo
@@ -225,7 +230,13 @@ public class RecortarImagen extends AppCompatActivity {
             Log.e("Uri guardada en",resultUri.toString());
 
             if (resultUri != null) {
-                cropImage.setImageURI(resultUri);
+
+                Intent intent = new Intent(getApplicationContext(), EditarFoto.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("bundleCrop",resultUri.toString());
+                intent.putExtras(bundle);
+                startActivity(intent);
+
             }
             else if (resultCode == UCrop.RESULT_ERROR) {
                 final Throwable cropError = UCrop.getError(data);
