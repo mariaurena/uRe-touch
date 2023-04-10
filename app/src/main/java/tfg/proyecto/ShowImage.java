@@ -61,6 +61,11 @@ public class ShowImage extends Activity {
             }
             imgView.setImageBitmap(imageBitMap);
         }
+        // seguramente estamos recibiendo la imagen recortada
+        else{
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
 
         botonSi.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,228 +7,249 @@
     android:orientation="vertical"
     android:exported="true">
 
-    <Button
-        android:id="@+id/botonAtras"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ATRAS" />
-
-
-    <jp.co.cyberagent.android.gpuimage.GPUImageView
-        android:id="@+id/gpuimageview"
-        android:layout_width="214dp"
-        android:layout_height="218dp"
-        app:gpuimage_show_loading="false"
-        app:gpuimage_surface_type="texture_view" />
-
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Exposición">
-    </TextView>
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
 
-        <SeekBar
-            android:id="@+id/seekbarExposicion"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="30" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewExpo"
-        ></TextView>
-    </LinearLayout>
+          <Button
+              android:id="@+id/botonAtras"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="ATRAS" />
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Contraste">
-    </TextView>
+          <jp.co.cyberagent.android.gpuimage.GPUImageView
+              android:id="@+id/gpuimageview"
+              android:layout_width="196dp"
+              android:layout_height="193dp"
+              app:gpuimage_show_loading="false"
+              app:gpuimage_surface_type="texture_view" />
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Exposición">
+          </TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarExposicion"
+                  android:layout_width="370dp"
+                  android:layout_height="wrap_content"
+                  android:max="60"
+                  android:progress="30" />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewExpo"
+                  ></TextView>
+          </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <SeekBar
-            android:id="@+id/seekbarContraste"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="30"  />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewCon"
-            ></TextView>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sombras">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <SeekBar
-            android:id="@+id/seekbarSombras"
-            android:layout_width="370dp"
-            android:layout_height="match_parent"
-            android:max="60"
-            android:progress="30"  />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewSom"
-            ></TextView>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Luces">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <SeekBar
-            android:id="@+id/seekbarLuces"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="30"  />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewLuc"
-            ></TextView>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Brillo">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <SeekBar
-            android:id="@+id/seekbarBrillo"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="30"  />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewBr"
-            ></TextView>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Saturación">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <SeekBar
-            android:id="@+id/seekbarSaturacion"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="30"  />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewSat"
-            ></TextView>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tono">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <SeekBar
-            android:id="@+id/seekbarTono"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="30"  />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewTono"
-            ></TextView>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nitidez">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <SeekBar
-            android:id="@+id/seekbarNitidez"
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:max="60"
-            android:progress="30"  />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewNit"
-            ></TextView>
-    </LinearLayout>
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Contraste">
+          </TextView>
 
 
-    <Button
-        android:id="@+id/botonRecortar"
-        android:layout_width="wrap_content"
-        android:layout_height="38dp"
-        android:text="RECORTAR" />
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarContraste"
+                  android:layout_width="370dp"
+                  android:layout_height="wrap_content"
+                  android:max="60"
+                  android:progress="30"  />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewCon"
+                  ></TextView>
+
+          </LinearLayout>
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Sombras">
+          </TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarSombras"
+                  android:layout_width="370dp"
+                  android:layout_height="match_parent"
+                  android:max="60"
+                  android:progress="30"  />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewSom"
+                  ></TextView>
+          </LinearLayout>
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Luces">
+          </TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarLuces"
+                  android:layout_width="370dp"
+                  android:layout_height="wrap_content"
+                  android:max="60"
+                  android:progress="30"  />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewLuc"
+                  ></TextView>
+          </LinearLayout>
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Brillo">
+          </TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarBrillo"
+                  android:layout_width="370dp"
+                  android:layout_height="wrap_content"
+                  android:max="60"
+                  android:progress="30"  />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewBr"
+                  ></TextView>
+          </LinearLayout>
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Saturación">
+          </TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarSaturacion"
+                  android:layout_width="370dp"
+                  android:layout_height="wrap_content"
+                  android:max="60"
+                  android:progress="30"  />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewSat"
+                  ></TextView>
+          </LinearLayout>
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Tono">
+          </TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarTono"
+                  android:layout_width="370dp"
+                  android:layout_height="wrap_content"
+                  android:max="60"
+                  android:progress="30"  />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewTono"
+                  ></TextView>
+          </LinearLayout>
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Nitidez">
+          </TextView>
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+              <SeekBar
+                  android:id="@+id/seekbarNitidez"
+                  android:layout_width="370dp"
+                  android:layout_height="wrap_content"
+                  android:max="60"
+                  android:progress="30"  />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/textViewNit"
+                  ></TextView>
+          </LinearLayout>
+
+          <Button
+              android:id="@+id/botonRecortar"
+              android:layout_width="wrap_content"
+              android:layout_height="38dp"
+              android:text="RECORTAR" />
+
+          <Button
+              android:id="@+id/botonGuardar"
+              android:layout_width="wrap_content"
+              android:layout_height="38dp"
+              android:text="GUARDAR" />
+
+
+      </LinearLayout>
+
+
+
+    </ScrollView>
 
 </LinearLayout>

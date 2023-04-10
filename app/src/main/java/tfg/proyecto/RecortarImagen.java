@@ -57,8 +57,10 @@ public class RecortarImagen extends AppCompatActivity {
     String imagenGaleria   = null;
     String imagenCamara    = null;
     String imagenRecortada = null;
+    String imagenEditada   = null;
 
     Bitmap imageBitMap;
+    Bitmap bitMapEditado;
     CropImageView mCropView;
     ImageView cropImage;
     Button botonAtras;
@@ -92,15 +94,18 @@ public class RecortarImagen extends AppCompatActivity {
         imagenCamara    = bundle.getString("bundleRuta");
         imagenGaleria   = bundle.getString("bundleFileName");
         imagenRecortada = bundle.getString("bundleCrop");
+        imagenEditada   = bundle.getString("bundleEditado");
 
         cropImage = (ImageView) findViewById(R.id.imagenRecortada);
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
 
         if (imagenCamara != null) {
+            Log.e("fd","obtengo imagencamara");
             // Obtenemos la imagen almacenada en imagenes_capturadas
             imageBitMap = BitmapFactory.decodeFile(imagenCamara);
         }
         else if (imagenGaleria != null) {
+            Log.e("fd","obtengo imagen galeria");
             // descargamos de disco la imagen (filename)
             try {
                 FileInputStream is = this.openFileInput(imagenGaleria);
@@ -111,15 +116,22 @@ public class RecortarImagen extends AppCompatActivity {
             }
         }
         else if (imagenRecortada != null){
+            Log.e("fd","obtengo imagen recortada");
             myUri = Uri.parse(imagenRecortada);
         }
 
+        else if (imagenEditada != null){
+            Log.e("d","Recibimos imagen con filtros");
+            imageBitMap = BitmapFactory.decodeFile(imagenEditada);
+        }
+
         if (myUri != null){
-            uriARecortar = myUri;
+           // uriARecortar = myUri;
         }
         else{
-            uriARecortar = getImageUri(getBaseContext(),imageBitMap);
+            //uriARecortar = getImageUri(getBaseContext(),imageBitMap);
         }
+        uriARecortar = getImageUri(getBaseContext(),imageBitMap);
         // guardaremos la uri de la imagen recortada en la caché
         uriRecortada = Uri.fromFile(new File(getCacheDir(), destinationFileName));
 
