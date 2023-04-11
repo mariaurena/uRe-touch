@@ -46,8 +46,10 @@ import com.mayank.simplecropview.callback.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,13 +101,18 @@ public class RecortarImagen extends AppCompatActivity {
         cropImage = (ImageView) findViewById(R.id.imagenRecortada);
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
 
-        if (imagenCamara != null) {
-            Log.e("fd","obtengo imagencamara");
+        // -- RECIBIMOS --
+
+        // -- CÁMARA --
+        if (imagenCamara != null ) {
+            Log.e("fd","obtengo imagen camara sin editar (recortarImagen)");
             // Obtenemos la imagen almacenada en imagenes_capturadas
             imageBitMap = BitmapFactory.decodeFile(imagenCamara);
         }
+
+        // -- GALERIA --
         else if (imagenGaleria != null) {
-            Log.e("fd","obtengo imagen galeria");
+            Log.e("fd","obtengo imagen galeria sin editar (recortarImagen)");
             // descargamos de disco la imagen (filename)
             try {
                 FileInputStream is = this.openFileInput(imagenGaleria);
@@ -115,23 +122,21 @@ public class RecortarImagen extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        // -- RECORTADA --
         else if (imagenRecortada != null){
-            Log.e("fd","obtengo imagen recortada");
-            myUri = Uri.parse(imagenRecortada);
+            Log.e("fd","obtengo imagen recortada sin editar (recortarImagen)");
+            imageBitMap = BitmapFactory.decodeFile(imagenRecortada);
         }
 
+        // -- EDITADA --
         else if (imagenEditada != null){
-            Log.e("d","Recibimos imagen con filtros");
+            Log.e("d","Recibimos imagen con filtros (recortarImagen)");
             imageBitMap = BitmapFactory.decodeFile(imagenEditada);
         }
 
-        if (myUri != null){
-           // uriARecortar = myUri;
-        }
-        else{
-            //uriARecortar = getImageUri(getBaseContext(),imageBitMap);
-        }
         uriARecortar = getImageUri(getBaseContext(),imageBitMap);
+
         // guardaremos la uri de la imagen recortada en la caché
         uriRecortada = Uri.fromFile(new File(getCacheDir(), destinationFileName));
 
@@ -168,18 +173,22 @@ public class RecortarImagen extends AppCompatActivity {
     public Uri getImageUri(Context context, Bitmap bitmap) {
         Uri uri = null;
         ContentValues values = new ContentValues();
+
         values.put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_" + System.currentTimeMillis());
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
 
         if (permisos_escritura() && permisos_lectura()) {
             try {
                 ContentResolver resolver = context.getContentResolver();
-                uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+                // guardamos la imagen temporalmente en la caché
+                uri =  Uri.fromFile(new File(getCacheDir(), destinationFileName));
 
                 OutputStream outstream = resolver.openOutputStream(uri);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outstream);
                 outstream.flush();
                 outstream.close();
+
 
             } catch (IOException e) {
                 if (uri != null) {
@@ -193,11 +202,6 @@ public class RecortarImagen extends AppCompatActivity {
         else{
         }
         return uri;
-    }
-
-    public Bitmap getImageBitMap(Uri uri) throws IOException {
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
-        return bitmap;
     }
 
     // pedimos permisos de escritura en tiempo de ejecución (necesario a partir de Android 11 API 30)
@@ -259,7 +263,15 @@ public class RecortarImagen extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), EditarFoto.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("bundleCrop",resultUri.toString());
+                if (imagenEditada == null){
+                    bundle.putString("bundleCrop",resultUri.toString());
+                    Log.e("s","envio imagen recortada sin editar en bundleCrop (recortarImagen)");
+                }
+                else{
+                    bundle.putString("bundleEditado",resultUri.toString());
+                    bundle.putString("bundleCrop",resultUri.toString());
+                    Log.e("s","envio imagen recortada y editada (recortarImagen) en bundleEditado");
+                }
                 intent.putExtras(bundle);
                 startActivity(intent);
 
@@ -278,6 +290,26 @@ public class RecortarImagen extends AppCompatActivity {
             Log.e("Error onActivityResult",cropError.getMessage());
             cropError.printStackTrace();
         }
+    }
+
+    // Convertir URI a bitmap
+    public static Bitmap obtenerBitMap(Context context, Uri uri) throws FileNotFoundException {
+
+        // Abrir input stream desde la URI
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+
+        // Decodificar el input stream en un Bitmap
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+        // Cerrar el input stream
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Devolver el bitmap decodificado
+        return bitmap;
     }
 
 

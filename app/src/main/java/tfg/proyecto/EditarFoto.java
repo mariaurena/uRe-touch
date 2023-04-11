@@ -3,11 +3,13 @@ package tfg.proyecto;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -34,8 +37,10 @@ import com.mayank.simplecropview.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import jp.co.cyberagent.android.gpuimage.GPUImage;
@@ -56,16 +61,17 @@ public class EditarFoto extends Activity {
     String imagenGaleria = null;
     String imagenCamara  = null;
     String imagenRecortada  = null;
+    String imagenEditada = null;
+
     Bitmap imageBitMap;
     Button botonAtras;
     Button botonRecortar;
     Button botonGuardar;
     GPUImage gpuImage;
     GPUImageView gpuImageView;
-    ImageView imagenEditada;
-    SeekBar exposicionSeekBar,contrasteSeekBar,sombrasSeekBar,lucesSeekBar,brilloSeekBar,satSeekBar,tonoSeekBar,nitSeekBar;
+    SeekBar exposicionSeekBar,contrasteSeekBar,sombrasSeekBar,lucesSeekBar,brilloSeekBar,satSeekBar,nitSeekBar;
 
-    TextView textViewExpo,textViewCon,textViewSom,textViewLuc,textViewBr,textViewSat,textViewTono,textViewNit;
+    TextView textViewExpo,textViewCon,textViewSom,textViewLuc,textViewBr,textViewSat,textViewNit;
 
     Boolean editada        = false;
     Boolean bajaEficiencia = true; // la pondremos a true para dispositivos lentos
@@ -76,31 +82,24 @@ public class EditarFoto extends Activity {
     GPUImageHighlightShadowFilter filtroLuces;
     GPUImageBrightnessFilter      filtroBrillo;
     GPUImageSaturationFilter      filtroSat;
-    GPUImageHueFilter             filtroTono;
     GPUImageSharpenFilter         filtroNit;
 
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
 
-    // parámetros de los filtros básicos
-    float exposure   = 0.0f;
-    float contrast   = 1.0f;
-    float shadow     = 0.0f;
-    float highlights = 1.0f;
-    float brightness = 0.0f;
-    float saturation = 1.0f;
-    float hue        = 90.0f; // tono
-    float sharpness  = 0.0f;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editar_foto);
 
-        Bundle bundle   = getIntent().getExtras();
-        imagenCamara    = bundle.getString("bundleRuta");
-        imagenGaleria   = bundle.getString("bundleFileName");
-        imagenRecortada = bundle.getString("bundleCrop");
+        Bundle bundle = getIntent().getExtras();
+
+        imagenCamara           = bundle.getString("bundleRuta");
+        imagenGaleria          = bundle.getString("bundleFileName");
+        imagenRecortada        = bundle.getString("bundleCrop");
+        imagenEditada          = bundle.getString("bundleEditado");
 
         gpuImageView       = findViewById(R.id.gpuimageview);
         exposicionSeekBar  = findViewById(R.id.seekbarExposicion);
@@ -109,20 +108,31 @@ public class EditarFoto extends Activity {
         lucesSeekBar       = findViewById(R.id.seekbarLuces);
         brilloSeekBar      = findViewById(R.id.seekbarBrillo);
         satSeekBar         = findViewById(R.id.seekbarSaturacion);
-        tonoSeekBar        = findViewById(R.id.seekbarTono);
         nitSeekBar         = findViewById(R.id.seekbarNitidez);
 
 
         gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
-        filtroExposición  = new GPUImageExposureFilter();
-        filtroContraste   = new GPUImageContrastFilter();
-        filtroSombras     = new GPUImageHighlightShadowFilter();
-        filtroLuces       = new GPUImageHighlightShadowFilter();
-        filtroBrillo      = new GPUImageBrightnessFilter();
-        filtroSat         = new GPUImageSaturationFilter();
-        filtroTono        = new GPUImageHueFilter();
-        filtroNit         = new GPUImageSharpenFilter();
+        filtroExposición = new GPUImageExposureFilter();
+        filtroExposición.setExposure(0.0f);
+
+        filtroContraste = new GPUImageContrastFilter();
+        filtroContraste.setContrast(1.0f);
+
+        filtroSombras = new GPUImageHighlightShadowFilter();
+        filtroSombras.setShadows(0.0f);
+
+        filtroLuces = new GPUImageHighlightShadowFilter();
+        filtroLuces.setHighlights(1.0f);
+
+        filtroBrillo = new GPUImageBrightnessFilter();
+        filtroBrillo.setBrightness(0.0f);
+
+        filtroSat = new GPUImageSaturationFilter();
+        filtroSat.setSaturation(1.0f);
+
+        filtroNit = new GPUImageSharpenFilter();
+        filtroNit.setSharpness(0.0f);
 
         textViewExpo = findViewById(R.id.textViewExpo);
         textViewCon  = findViewById(R.id.textViewCon);
@@ -130,76 +140,86 @@ public class EditarFoto extends Activity {
         textViewLuc  = findViewById(R.id.textViewLuc);
         textViewBr   = findViewById(R.id.textViewBr);
         textViewSat  = findViewById(R.id.textViewSat);
-        textViewTono = findViewById(R.id.textViewTono);
         textViewNit  = findViewById(R.id.textViewNit);
 
-        textViewExpo.setText("0");
-        textViewCon .setText("0");
-        textViewSom .setText("0");
-        textViewLuc .setText("0");
-        textViewBr  .setText("0");
-        textViewSat .setText("0");
-        textViewTono.setText("0");
-        textViewNit .setText("0");
+        textViewExpo.setText("30");
+        textViewCon .setText("30");
+        textViewSom .setText("30");
+        textViewLuc .setText("30");
+        textViewBr  .setText("30");
+        textViewSat .setText("30");
+        textViewNit .setText("30");
 
-        Handler handler = new Handler(Looper.getMainLooper());
 
+        // -- ENVIAMOS A RECORTAR --
         botonRecortar = findViewById(R.id.botonRecortar);
-        // para escuchar en el momento de presionar el boton de recortar
         botonRecortar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), RecortarImagen.class);
-                // necesario usar 'bundle' para que funcione
                 Bundle bundle = new Bundle();
-                // enviamos 'imagen camara' o 'imagen galeria'
-                if (imagenCamara != null){
+
+                // -- CÁMARA --
+                if (imagenCamara != null ){
 
                     if (editada == true){
-                        Log.e("e","enviamos imagen camara con filtro");
+                        Log.e("e","enviamos imagen camara con filtro (editarFoto)");
                         String filePath = saveBitmap(gpuImage.getBitmapWithFilterApplied(),"imagen.png");
                         bundle.putString("bundleEditado",filePath);
                     }
+
                     else{
-                        Log.e("e","envio imagen camara sin editar");
+                        Log.e("e","envio imagen camara sin editar (editarFoto)");
                         bundle.putString("bundleRuta",imagenCamara);
+
                     }
                 }
+
+                // -- GALERIA --
                 else if (imagenGaleria != null){
+
                     if (editada == true){
-                        Log.e("e","enviamos imagen galeria con filtro");
+                        Log.e("e","enviamos imagen galeria con filtro (editarFoto)");
                         String filePath = saveBitmap(gpuImage.getBitmapWithFilterApplied(),"imagen.png");
                         bundle.putString("bundleEditado",filePath);
 
                     }
                     else{
-                        Log.e("e","envio imagen galeria sin editar");
+                        Log.e("e","envio imagen galeria sin editar (editarFoto)");
                         bundle.putString("bundleFileName",imagenGaleria);
                     }
                 }
-                // enviamos la imagen recortada si queremos volver a recortarla
+
+                // -- RECORTADA --
                 else if (imagenRecortada != null){
-                    if (gpuImage.getBitmapWithFilterApplied() != null){
-                        Log.e("e","enviamos imagen con filtros");
-                        String bitMapEditado = gpuImage.toString();
-                        bundle.putString("bundleEditado",bitMapEditado);
+
+                    if (editada == true){
+                        Log.e("e","enviamos imagen recortada con filtros (editarFoto)");
+                        String filePath = saveBitmap(gpuImage.getBitmapWithFilterApplied(),"imagen.png");
+                        bundle.putString("bundleEditado",filePath);
                     }
                     else{
+                        Log.e("e","envio imagen recortada sin editar (editarFoto)");
                         bundle.putString("bundleCrop",imagenRecortada);
                     }
                 }
-                // imagen galeria
+
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
 
+        // -- RECIBIMOS --
+
+        // -- CÁMARA --
         if (imagenCamara != null){
             // Obtenemos la imagen almacenada en imagenes_capturadas
             imageBitMap = BitmapFactory.decodeFile(imagenCamara);
             gpuImageView.setImage(imageBitMap);
             gpuImage.setImage(imageBitMap);
         }
+
+        // -- GALERIA --
         else if (imagenGaleria != null){
             // descargamos de disco la imagen (filename)
             try {
@@ -212,10 +232,31 @@ public class EditarFoto extends Activity {
             gpuImageView.setImage(imageBitMap);
             gpuImage.setImage(imageBitMap);
         }
+
+        // -- RECORTADA --
         else if (imagenRecortada != null){
             Uri myUri = Uri.parse(imagenRecortada);
-            gpuImageView.setImage(myUri);
-            gpuImage.setImage(myUri);
+            Log.e("d","Recibimos imagen recortada sin editar (editarFoto) en bundleCrop ");
+            try {
+                imageBitMap = obtenerBitMap(this.getBaseContext(),myUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            gpuImageView.setImage(imageBitMap);
+            gpuImage.setImage(imageBitMap);
+        }
+
+        // -- EDITADA Y RECORTADA --
+        else if (imagenEditada != null){
+            Log.e("d","Recibimos imagen con filtros (editarFoto) en bundleEditado");
+            Uri myUri = Uri.parse(imagenEditada);
+            try {
+                imageBitMap = obtenerBitMap(this.getBaseContext(),myUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            gpuImageView.setImage(imageBitMap);
+            gpuImage.setImage(imageBitMap);
         }
 
         botonAtras = findViewById(R.id.botonAtras);
@@ -250,10 +291,9 @@ public class EditarFoto extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (bajaEficiencia == false){
-                    Log.e("a","alta eficiencia");
-                    exposure = i;
                     textViewExpo.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroExposición.setExposure(range(i,-10.0f,10.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -269,11 +309,10 @@ public class EditarFoto extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (bajaEficiencia == true){
-                    Log.e("b","baja eficiencia");
                     int i = seekBar.getProgress();
-                    exposure = i;
                     textViewExpo.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroExposición.setExposure(range(i,-10.0f,10.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -286,9 +325,9 @@ public class EditarFoto extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (bajaEficiencia == false){
-                    contrast = i;
                     textViewCon.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroContraste.setContrast(range(i,0.0f,4.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -305,9 +344,9 @@ public class EditarFoto extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (bajaEficiencia == true){
                     int i = seekBar.getProgress();
-                    contrast = i;
                     textViewCon.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroContraste.setContrast(range(i,0.0f,4.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -321,9 +360,9 @@ public class EditarFoto extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (bajaEficiencia == false){
-                    shadow = i;
                     textViewSom.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroSombras.setShadows(range(i,0.0f,1.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -340,9 +379,9 @@ public class EditarFoto extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (bajaEficiencia == true){
                     int i = seekBar.getProgress();
-                    shadow = i;
                     textViewSom.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroSombras.setShadows(range(i,0.0f,1.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -355,9 +394,9 @@ public class EditarFoto extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (bajaEficiencia == false){
-                    highlights = i;
                     textViewLuc.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroLuces.setHighlights(range(i,0.0f,1.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -374,9 +413,9 @@ public class EditarFoto extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (bajaEficiencia == true){
                     int i = seekBar.getProgress();
-                    highlights = i;
                     textViewLuc.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroLuces.setHighlights(range(i,0.0f,1.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -389,9 +428,9 @@ public class EditarFoto extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (bajaEficiencia == false){
-                    brightness = i;
                     textViewBr.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroBrillo.setBrightness(range(i,-1.0f,1.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -408,9 +447,9 @@ public class EditarFoto extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (bajaEficiencia == true){
                     int i = seekBar.getProgress();
-                    brightness = i;
                     textViewBr.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroBrillo.setBrightness(range(i,-1.0f,1.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -423,9 +462,9 @@ public class EditarFoto extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (bajaEficiencia == false){
-                    saturation = i;
                     textViewSat.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroSat.setSaturation(range(i,0.0f,2.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -443,43 +482,9 @@ public class EditarFoto extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (bajaEficiencia == true){
                     int i = seekBar.getProgress();
-                    saturation = i;
                     textViewSat.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
-                    gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
-                    gpuImageView.requestRender();
-                }
-            }
-        });
-
-        // -- tono --
-        ((SeekBar) findViewById(R.id.seekbarNitidez)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (bajaEficiencia == false){
-                    hue = i;
-                    textViewTono.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
-                    gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
-                    gpuImageView.requestRender();
-                }
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            // en dispositivos que no admiten tantos frames usaremos este método que únicamente
-            // recoge el valor del seekBar cuando soltamos el dedo
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (bajaEficiencia == true){
-                    int i = seekBar.getProgress();
-                    hue = i;
-                    textViewTono.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroSat.setSaturation(range(i,0.0f,2.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -491,9 +496,9 @@ public class EditarFoto extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (bajaEficiencia == false){
-                    sharpness = i;
                     textViewNit.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroNit.setSharpness(range(i,-4.0f,4.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -510,9 +515,9 @@ public class EditarFoto extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (bajaEficiencia == true){
                     int i = seekBar.getProgress();
-                    sharpness = i;
                     textViewNit.setText("" + i);
-                    gpuImage.setFilter(aplicarFiltros(exposure,contrast,shadow,highlights,brightness,saturation,hue,sharpness));
+                    filtroNit.setSharpness(range(i,-4.0f,4.0f));
+                    aplicarFiltros();
                     gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                     gpuImageView.requestRender();
                 }
@@ -554,31 +559,21 @@ public class EditarFoto extends Activity {
 
     }
 
-    public GPUImageFilterGroup aplicarFiltros(float exposure, float contrast, float shadow, float highlights, float brightness, float saturation, float hue, float sharpness){
-
+    public void aplicarFiltros(){
         GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
-        filtroExposición.setExposure(range(exposure,0.0f,10.0f));
-        filtroContraste .setContrast(range(contrast,0.0f,4.0f));
-        filtroSombras   .setShadows(range(shadow,0.0f,1.0f));
-        filtroLuces     .setHighlights(range(highlights,1.0f,0.0f));
-        filtroBrillo    .setBrightness(range(brightness,-1.0f,1.0f));
-        filtroSat       .setSaturation(range(saturation,0.0f,2.0f));
-        filtroTono      .setHue(range(hue,0.0f,180.0f));
-        filtroNit       .setSharpness(range(sharpness,-4.0f,4.0f));
 
         filterGroup.addFilter(filtroExposición);
         filterGroup.addFilter(filtroContraste);
         filterGroup.addFilter(filtroSombras);
         filterGroup.addFilter(filtroLuces);
         filterGroup.addFilter(filtroBrillo);
-        filterGroup.addFilter(filtroSat);
-        filterGroup.addFilter(filtroTono);
         filterGroup.addFilter(filtroNit);
-
+        filterGroup.addFilter(filtroSat);
 
         editada = true;
 
-        return filterGroup;
+        gpuImage.setFilter(filterGroup);
+
     }
 
     // pedimos permisos de escritura en tiempo de ejecución (necesario a partir de Android 11 API 30)
@@ -619,7 +614,8 @@ public class EditarFoto extends Activity {
         }
     }
 
-    // guardar el bitmap en el almacenamiento externo del dispositivo
+    // método para obtener el string de un bitmap:
+    // guarda el bitmap en el almacenamiento externo del dispositivo
     // se guarda en: /storage/emulated/0/Pictures
     public String saveBitmap(Bitmap bitmap, String filename) {
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/" + filename;
@@ -638,6 +634,26 @@ public class EditarFoto extends Activity {
         }
 
         return filePath;
+    }
+
+    // Convertir URI a bitmap
+    public static Bitmap obtenerBitMap(Context context, Uri uri) throws FileNotFoundException {
+
+        // Abrir input stream desde la URI
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+
+        // Decodificar el input stream en un Bitmap
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+        // Cerrar el input stream
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Devolver el bitmap decodificado
+        return bitmap;
     }
 
 
