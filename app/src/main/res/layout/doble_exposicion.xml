@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:exported="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <jp.co.cyberagent.android.gpuimage.GPUImageView
+                android:id="@+id/gpuimageview"
+                android:layout_width="406dp"
+                android:layout_height="354dp"
+                app:gpuimage_show_loading="false"
+                app:gpuimage_surface_type="texture_view" />
+
+            <Button
+                android:id="@+id/exportar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EXPORTAR IMAGEN DESDE GALERIA" />
+
+            <SeekBar
+                android:id="@+id/seekbarOpacidad"
+                android:layout_width="370dp"
+                android:layout_height="wrap_content"
+                android:max="60"
+                android:progress="30" />
+
+            <Button
+                android:id="@+id/botonGuardar"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="GUARDAR" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

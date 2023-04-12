@@ -21,7 +21,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_INTERNAL_STORAGE" />
@@ -30,16 +29,22 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Camera"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TFG"
-        tools:targetApi="31"
-        android:requestLegacyExternalStorage="true"
-        android:largeHeap="true">
+        tools:targetApi="31">
+        <activity
+            android:name=".DobleExposicion"
+            android:exported="false" />
+        <activity
+            android:name=".EditarFotoAvanzado"
+            android:exported="false" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".RecortarImagen"
             android:exported="true" />

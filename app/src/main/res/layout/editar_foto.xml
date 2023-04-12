@@ -41,9 +41,16 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
 
+              <Button
+                  android:id="@+id/restablecerExpo"
+                  android:layout_width="54dp"
+                  android:layout_height="36dp"
+                  android:text="X">
+              </Button>
+
               <SeekBar
                   android:id="@+id/seekbarExposicion"
-                  android:layout_width="370dp"
+                  android:layout_width="312dp"
                   android:layout_height="wrap_content"
                   android:max="60"
                   android:progress="30" />
@@ -68,9 +75,16 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
 
+              <Button
+                  android:id="@+id/restablecerContraste"
+                  android:layout_width="54dp"
+                  android:layout_height="36dp"
+                  android:text="X">
+              </Button>
+
               <SeekBar
                   android:id="@+id/seekbarContraste"
-                  android:layout_width="370dp"
+                  android:layout_width="312dp"
                   android:layout_height="wrap_content"
                   android:max="60"
                   android:progress="30"  />
@@ -94,9 +108,16 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
 
+              <Button
+                  android:id="@+id/restablecerSombras"
+                  android:layout_width="54dp"
+                  android:layout_height="36dp"
+                  android:text="X">
+              </Button>
+
               <SeekBar
                   android:id="@+id/seekbarSombras"
-                  android:layout_width="370dp"
+                  android:layout_width="312dp"
                   android:layout_height="match_parent"
                   android:max="60"
                   android:progress="30"  />
@@ -118,10 +139,16 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="horizontal">
+              <Button
+                  android:id="@+id/restablecerLuces"
+                  android:layout_width="54dp"
+                  android:layout_height="36dp"
+                  android:text="X">
+              </Button>
 
               <SeekBar
                   android:id="@+id/seekbarLuces"
-                  android:layout_width="370dp"
+                  android:layout_width="312dp"
                   android:layout_height="wrap_content"
                   android:max="60"
                   android:progress="30"  />
@@ -144,9 +171,16 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
 
+              <Button
+                  android:id="@+id/restablecerBrillo"
+                  android:layout_width="54dp"
+                  android:layout_height="36dp"
+                  android:text="X">
+              </Button>
+
               <SeekBar
                   android:id="@+id/seekbarBrillo"
-                  android:layout_width="370dp"
+                  android:layout_width="312dp"
                   android:layout_height="wrap_content"
                   android:max="60"
                   android:progress="30"  />
@@ -169,9 +203,16 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
 
+              <Button
+                  android:id="@+id/restablecerSaturacion"
+                  android:layout_width="54dp"
+                  android:layout_height="36dp"
+                  android:text="X">
+              </Button>
+
               <SeekBar
                   android:id="@+id/seekbarSaturacion"
-                  android:layout_width="370dp"
+                  android:layout_width="312dp"
                   android:layout_height="wrap_content"
                   android:max="60"
                   android:progress="30"  />
@@ -194,9 +235,16 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
 
+              <Button
+                  android:id="@+id/restablecerNitidez"
+                  android:layout_width="54dp"
+                  android:layout_height="36dp"
+                  android:text="X">
+              </Button>
+
               <SeekBar
                   android:id="@+id/seekbarNitidez"
-                  android:layout_width="370dp"
+                  android:layout_width="312dp"
                   android:layout_height="wrap_content"
                   android:max="60"
                   android:progress="30"  />
@@ -220,6 +268,11 @@
               android:layout_height="38dp"
               android:text="GUARDAR" />
 
+          <Button
+              android:id="@+id/filtrosAvanzados"
+              android:layout_width="wrap_content"
+              android:layout_height="38dp"
+              android:text="FILTROS AVANZADOS" />
 
       </LinearLayout>
 

@@ -56,13 +56,13 @@ import java.util.Date;
 
 public class RecortarImagen extends AppCompatActivity {
 
-    String imagenGaleria   = null;
-    String imagenCamara    = null;
-    String imagenRecortada = null;
-    String imagenEditada   = null;
+    String imagenGaleria    = null;
+    String imagenCamara     = null;
+    String imagenRecortada  = null;
+    String imagenEditada    = null;
+    String imagenEditadaAv  = null;
 
     Bitmap imageBitMap;
-    Bitmap bitMapEditado;
     CropImageView mCropView;
     ImageView cropImage;
     Button botonAtras;
@@ -97,6 +97,7 @@ public class RecortarImagen extends AppCompatActivity {
         imagenGaleria   = bundle.getString("bundleFileName");
         imagenRecortada = bundle.getString("bundleCrop");
         imagenEditada   = bundle.getString("bundleEditado");
+        imagenEditadaAv = bundle.getString("bundleEditadoAv");
 
         cropImage = (ImageView) findViewById(R.id.imagenRecortada);
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
@@ -133,6 +134,11 @@ public class RecortarImagen extends AppCompatActivity {
         else if (imagenEditada != null){
             Log.e("d","Recibimos imagen con filtros (recortarImagen)");
             imageBitMap = BitmapFactory.decodeFile(imagenEditada);
+        }
+
+        // -- EDITADA AVANZADA
+        else if (imagenEditadaAv != null){
+            imageBitMap = BitmapFactory.decodeFile(imagenEditadaAv);
         }
 
         uriARecortar = getImageUri(getBaseContext(),imageBitMap);
@@ -263,7 +269,10 @@ public class RecortarImagen extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), EditarFoto.class);
                 Bundle bundle = new Bundle();
+
+                //-- ENVIAMOS --
                 if (imagenEditada == null){
+                    Log.e("imagen en recortar es: ",resultUri.toString());
                     bundle.putString("bundleCrop",resultUri.toString());
                     Log.e("s","envio imagen recortada sin editar en bundleCrop (recortarImagen)");
                 }
