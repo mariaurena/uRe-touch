@@ -8,11 +8,6 @@
     android:orientation="vertical"
     android:exported="true">
 
-    <Button
-        android:id="@+id/botonAtras"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ATRAS" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -28,9 +23,5 @@
             app:cropShape="oval" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imagenRecortada"
-        android:layout_width="427dp"
-        android:layout_height="374dp" />
 
 </LinearLayout>

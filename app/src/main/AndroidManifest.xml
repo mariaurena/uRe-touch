@@ -36,6 +36,9 @@
         android:theme="@style/Theme.TFG"
         tools:targetApi="31">
         <activity
+            android:name=".miImagen"
+            android:exported="false" />
+        <activity
             android:name=".DobleExposicion"
             android:exported="false" />
         <activity

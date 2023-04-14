@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     // ruta de la imagen capturada con la cámara
     String imagenCamara;
 
+    MiImagen miImagen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         botonCamara  = findViewById(R.id.botonCamara);
         botonGaleria = findViewById(R.id.botonGaleria);
         imgView      = findViewById(R.id.imageView);
+
+        miImagen = new MiImagen();
 
         // para escuchar en el momento de presionar el boton de cámara
         botonCamara.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             // le enviamos a showImage la ruta de la imagen
             Intent intent = new Intent(this,ShowImage.class);
-            //intent.putExtra("rutaImagen",rutaImagen);
 
             // necesario usar 'bundle' para que funcione
             Bundle bundle = new Bundle();

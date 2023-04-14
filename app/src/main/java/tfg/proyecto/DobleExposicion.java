@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import jp.co.cyberagent.android.gpuimage.GPUImage;
 import jp.co.cyberagent.android.gpuimage.GPUImageView;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageAddBlendFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageDissolveBlendFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilterGroup;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageOpacityFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageSubtractBlendFilter;
@@ -36,23 +37,21 @@ import java.io.OutputStream;
 
 public class DobleExposicion extends AppCompatActivity {
 
+    MiImagen miImagen;
+
     GPUImage     gpuImage;
     GPUImageView gpuImageView;
 
     Button exportar;
     Button botonGuardar;
-    Button botonMezclaResta;
 
     Bitmap imagenRecibida;
     Bitmap imagenElegidaGaleria;
+    Bitmap imagenElegidaResize;
 
-    String imagenCamara, imagenGaleria;
+    GPUImageDissolveBlendFilter filtroMezcla;
 
-    GPUImageAddBlendFilter filtroMezcla;
-    GPUImageOpacityFilter  filtroOpacidad;
-
-
-    SeekBar opacidadSeekBar;
+    SeekBar seekbarBlend;
 
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
@@ -62,42 +61,50 @@ public class DobleExposicion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doble_exposicion);
 
-        Bundle bundle = getIntent().getExtras();
-        imagenCamara           = bundle.getString("bundleRuta");
-        imagenGaleria          = bundle.getString("bundleFileName");
-
         gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
         gpuImageView    = findViewById(R.id.gpuimageview);
         exportar        = findViewById(R.id.exportar);
-        opacidadSeekBar = findViewById(R.id.seekbarOpacidad);
-        opacidadSeekBar.setVisibility(View.GONE); // al principio no la mostramos
+        seekbarBlend    = findViewById(R.id.seekbarBlend);
 
-        filtroMezcla    = new GPUImageAddBlendFilter();
-        filtroOpacidad  = new GPUImageOpacityFilter();
+        seekbarBlend.setVisibility(View.GONE); // al principio no la mostramos
 
+        filtroMezcla    = new GPUImageDissolveBlendFilter();
+        filtroMezcla.setMix(0.5f);
 
-        // -- RECIBIMOS --
+        miImagen = new MiImagen();
 
-        // -- CÁMARA --
-        if (imagenCamara != null){
-            // Obtenemos la imagen almacenada en imagenes_capturadas
-            imagenRecibida = BitmapFactory.decodeFile(imagenCamara);
-            gpuImageView.setImage(imagenRecibida);
+        // --------------- CÁMARA ---------------
+
+        if (miImagen.getEstado() == 0){
+            imagenRecibida = miImagen.getBitmapCamara();
         }
 
-        // -- GALERIA --
-        else if (imagenGaleria != null){
-            // descargamos de disco la imagen (filename)
-            try {
-                FileInputStream is = this.openFileInput(imagenGaleria);
-                imagenRecibida = BitmapFactory.decodeStream(is);
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            gpuImageView.setImage(imagenRecibida);
+        // --------------- GALERIA ---------------
+
+        else if (miImagen.getEstado() == 1){
+            imagenRecibida = miImagen.getBitmapGaleria();
         }
+
+        // --------------- RECORTADA ---------------
+
+        else if (miImagen.getEstado() == 2){
+            imagenRecibida = miImagen.getBitmapRecortada();
+        }
+
+        // --------------- EDITADA ---------------
+
+        else if (miImagen.getEstado() == 3){
+            imagenRecibida = miImagen.getBitmapEditada();
+        }
+
+        // --------------- EDITADA AV ---------------
+
+        else if (miImagen.getEstado() == 4){
+            imagenRecibida = miImagen.getBitmapEditadaAv();
+        }
+
+        gpuImageView.setImage(imagenRecibida);
 
         exportar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -115,14 +122,15 @@ public class DobleExposicion extends AppCompatActivity {
             }
         });
 
-        opacidadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekbarBlend.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                gpuImage.setImage(imagenRecibida);
-                filtroOpacidad.setOpacity(i/100.0f);
-                aplicarFiltros();
-                gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
-                gpuImageView.requestRender();
+                if (miImagen.getBajaEficiencia() == false){
+                    filtroMezcla.setMix(range(i,0.0f,1.0f));
+                    aplicarFiltros();
+                    gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
+                    gpuImageView.requestRender();
+                }
             }
 
             @Override
@@ -132,6 +140,12 @@ public class DobleExposicion extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                if (miImagen.getBajaEficiencia() == true){
+                    filtroMezcla.setMix(range(seekBar.getProgress(),0.0f,1.0f));
+                    aplicarFiltros();
+                    gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
+                    gpuImageView.requestRender();
+                }
 
             }
         });
@@ -152,16 +166,23 @@ public class DobleExposicion extends AppCompatActivity {
             try {
                 imagenElegidaGaleria = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
+                // cambiamos el tamaño de la imagen elegida de la galeria para que se ajuste a la imagen recibida
+                int width  = imagenRecibida.getWidth();
+                int height = imagenRecibida.getHeight();
+
+                imagenElegidaResize = Bitmap.createScaledBitmap(imagenElegidaGaleria,width,height,false);
+
                 gpuImage.setFilter(filtroMezcla);
 
                 filtroMezcla.setBitmap(imagenRecibida);
-                gpuImage.setImage(imagenElegidaGaleria);
+                gpuImage.setImage(imagenElegidaResize);
                 Bitmap blendedBitmap = gpuImage.getBitmapWithFilterApplied();
 
                 gpuImageView.setImage(blendedBitmap);
 
                 //mostramos la seekBar para ajustar la opacidad
-                opacidadSeekBar.setVisibility(View.VISIBLE);
+                seekbarBlend.setVisibility(View.VISIBLE);
+                seekbarBlend.setProgress(60);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -173,17 +194,20 @@ public class DobleExposicion extends AppCompatActivity {
     public void aplicarFiltros(){
         GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
 
-        filterGroup.addFilter(filtroOpacidad);
         filterGroup.addFilter(filtroMezcla);
 
         filtroMezcla.setBitmap(imagenRecibida);
-        gpuImage.setImage(imagenElegidaGaleria);
+        gpuImage.setImage(imagenElegidaResize);
         Bitmap blendedBitmap = gpuImage.getBitmapWithFilterApplied();
 
         gpuImageView.setImage(blendedBitmap);
 
         gpuImage.setFilter(filterGroup);
 
+    }
+
+    protected float range(final float percentage, final float start, final float end) {
+        return (end - start) * percentage / 100.0f + start;
     }
 
     public void saveImage(){

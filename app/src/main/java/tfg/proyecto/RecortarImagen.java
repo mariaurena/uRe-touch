@@ -65,16 +65,12 @@ public class RecortarImagen extends AppCompatActivity {
     Bitmap imageBitMap;
     CropImageView mCropView;
     ImageView cropImage;
-    Button botonAtras;
+
+    MiImagen miImagen;
 
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.jpg";
 
-    static Uri uriGuardada;
     private Bitmap.CompressFormat mCompressFormat = Bitmap.CompressFormat.PNG;
-
-    private RectF mFrameRect = null;
-    private Uri   mSourceUri = null;
-
 
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
@@ -84,13 +80,13 @@ public class RecortarImagen extends AppCompatActivity {
     Uri uriARecortar;
     Uri uriRecortada;
 
-    Uri myUri = null;
-
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recortar_imagen);
+
+        /*
 
         Bundle bundle   = getIntent().getExtras();
         imagenCamara    = bundle.getString("bundleRuta");
@@ -99,47 +95,42 @@ public class RecortarImagen extends AppCompatActivity {
         imagenEditada   = bundle.getString("bundleEditado");
         imagenEditadaAv = bundle.getString("bundleEditadoAv");
 
-        cropImage = (ImageView) findViewById(R.id.imagenRecortada);
+         */
+
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
 
-        // -- RECIBIMOS --
+        miImagen = new MiImagen();
 
-        // -- CÁMARA --
-        if (imagenCamara != null ) {
-            Log.e("fd","obtengo imagen camara sin editar (recortarImagen)");
-            // Obtenemos la imagen almacenada en imagenes_capturadas
-            imageBitMap = BitmapFactory.decodeFile(imagenCamara);
+        // --------------- CÁMARA ---------------
+
+        if (miImagen.getEstado() == 0){
+            imageBitMap = miImagen.getBitmapCamara();
         }
 
-        // -- GALERIA --
-        else if (imagenGaleria != null) {
-            Log.e("fd","obtengo imagen galeria sin editar (recortarImagen)");
-            // descargamos de disco la imagen (filename)
-            try {
-                FileInputStream is = this.openFileInput(imagenGaleria);
-                imageBitMap = BitmapFactory.decodeStream(is);
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        // --------------- GALERIA ---------------
+
+        else if (miImagen.getEstado() == 1){
+            imageBitMap = miImagen.getBitmapGaleria();
         }
 
-        // -- RECORTADA --
-        else if (imagenRecortada != null){
-            Log.e("fd","obtengo imagen recortada sin editar (recortarImagen)");
-            imageBitMap = BitmapFactory.decodeFile(imagenRecortada);
+        // --------------- RECORTADA ---------------
+
+        else if (miImagen.getEstado() == 2){
+            imageBitMap = miImagen.getBitmapRecortada();
         }
 
-        // -- EDITADA --
-        else if (imagenEditada != null){
-            Log.e("d","Recibimos imagen con filtros (recortarImagen)");
-            imageBitMap = BitmapFactory.decodeFile(imagenEditada);
+        // --------------- EDITADA ---------------
+
+        else if (miImagen.getEstado() == 3){
+            imageBitMap = miImagen.getBitmapEditada();
         }
 
-        // -- EDITADA AVANZADA
-        else if (imagenEditadaAv != null){
-            imageBitMap = BitmapFactory.decodeFile(imagenEditadaAv);
+        // --------------- EDITADA AV ---------------
+
+        else if (miImagen.getEstado() == 4){
+            imageBitMap = miImagen.getBitmapEditadaAv();
         }
+
 
         uriARecortar = getImageUri(getBaseContext(),imageBitMap);
 
@@ -155,23 +146,6 @@ public class RecortarImagen extends AppCompatActivity {
         UCrop.of(uriARecortar, uriRecortada)
                 .withOptions(options)
                 .start(this);
-
-        botonAtras = findViewById(R.id.botonAtras);
-
-        botonAtras.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), EditarFoto.class);
-                // necesario usar 'bundle' para que funcione
-                Bundle bundle = new Bundle();
-
-                bundle.putString("bundleRuta", imagenCamara);
-                bundle.putString("bundleFileName", imagenGaleria);
-                intent.putExtras(bundle);
-
-                startActivity(intent);
-            }
-        });
 
     }
 
@@ -269,6 +243,8 @@ public class RecortarImagen extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), EditarFoto.class);
                 Bundle bundle = new Bundle();
+
+                Bitmap bitmapRecortada = null;
 
                 //-- ENVIAMOS --
                 if (imagenEditada == null){

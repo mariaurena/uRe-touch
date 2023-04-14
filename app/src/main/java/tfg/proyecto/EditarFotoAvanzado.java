@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,10 +41,14 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilterGroup;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageGammaFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageGaussianBlurFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageGrayscaleFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageHalftoneFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageLuminanceThresholdFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageMonochromeFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageSobelEdgeDetectionFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageSphereRefractionFilter;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageToneCurveFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageVibranceFilter;
+
 
 public class EditarFotoAvanzado extends AppCompatActivity {
 
@@ -51,7 +56,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
     String imagenCamara     = null;
     String imagenRecortada  = null;
     String imagenEditada    = null;
-    String imagenEditadaAv  = null;
 
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
@@ -78,18 +82,19 @@ public class EditarFotoAvanzado extends AppCompatActivity {
     SeekBar vivacidadSeekBar;
     SeekBar gammaSeekBar;
     SeekBar esferaSeekBar;
+    SeekBar halftoneSeekBar;
 
     TextView textViewGau;
     TextView textViewViv;
     TextView textViewGamma;
     TextView textViewEsfera;
 
-    GPUImageGaussianBlurFilter     filtroGausiano;
-    GPUImageVibranceFilter         filtroVivacidad;
-    GPUImageGammaFilter            filtroGamma;
-    GPUImageSphereRefractionFilter filtroEsfera;
+    GPUImageGaussianBlurFilter       filtroGausiano;
+    GPUImageVibranceFilter           filtroVivacidad;
+    GPUImageGammaFilter              filtroGamma;
+    GPUImageSphereRefractionFilter   filtroEsfera;
 
-    Boolean bajaEficiencia = true; // la pondremos a true para dispositivos lentos
+    MiImagen miImagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,89 +105,66 @@ public class EditarFotoAvanzado extends AppCompatActivity {
 
         gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
-        filtroGausiano  = new GPUImageGaussianBlurFilter();
-        filtroVivacidad = new GPUImageVibranceFilter();
-        filtroGamma     = new GPUImageGammaFilter();
-        filtroEsfera    = new GPUImageSphereRefractionFilter();
+        filtroGausiano    = new GPUImageGaussianBlurFilter();
+        filtroVivacidad   = new GPUImageVibranceFilter();
+        filtroGamma       = new GPUImageGammaFilter();
+        filtroEsfera      = new GPUImageSphereRefractionFilter();
 
-        gaussianSeekBar  = findViewById(R.id.seekbarGaussian);
-        vivacidadSeekBar = findViewById(R.id.seekbarVivacidad);
-        gammaSeekBar     = findViewById(R.id.seekbarGamma);
-        esferaSeekBar    = findViewById(R.id.seekbarEsfera);
+        gaussianSeekBar   = findViewById(R.id.seekbarGaussian);
+        vivacidadSeekBar  = findViewById(R.id.seekbarVivacidad);
+        gammaSeekBar      = findViewById(R.id.seekbarGamma);
+        esferaSeekBar     = findViewById(R.id.seekbarEsfera);
 
-        textViewGau    = findViewById(R.id.textViewGau);
-        textViewViv    = findViewById(R.id.textViewViv);
-        textViewGamma  = findViewById(R.id.textViewGamma);
-        textViewEsfera = findViewById(R.id.textViewEsfera);
+        textViewGau       = findViewById(R.id.textViewGau);
+        textViewViv       = findViewById(R.id.textViewViv);
+        textViewGamma     = findViewById(R.id.textViewGamma);
+        textViewEsfera    = findViewById(R.id.textViewEsfera);
 
-        restablecerGau  = findViewById(R.id.restablecerGau);
-        restablecerViv  = findViewById(R.id.restablecerViv);
-        restablecerGamma = findViewById(R.id.restablecerGamma);
-        restablecerEsfera = findViewById(R.id.restablecerEsfera);
+        restablecerGau      = findViewById(R.id.restablecerGau);
+        restablecerViv      = findViewById(R.id.restablecerViv);
+        restablecerGamma    = findViewById(R.id.restablecerGamma);
+        restablecerEsfera   = findViewById(R.id.restablecerEsfera);
 
-        textViewGau   .setText("0");
-        textViewViv   .setText("30");
-        textViewGamma .setText("30");
-        textViewEsfera.setText("0");
+        textViewGau       .setText("0");
+        textViewViv       .setText("30");
+        textViewGamma     .setText("30");
+        textViewEsfera    .setText("0");
 
-        // -- RECIBIMOS DE EDITAR FOTO --
-        Bundle bundle = getIntent().getExtras();
+        miImagen = new MiImagen();
 
-        imagenCamara           = bundle.getString("bundleRuta");
-        imagenGaleria          = bundle.getString("bundleFileName");
-        imagenRecortada        = bundle.getString("bundleCrop");
-        imagenEditada          = bundle.getString("bundleEditado");
-        imagenEditadaAv        = bundle.getString("bundleEditadoAv");
+        // --------------- CÁMARA ---------------
 
-        // -- CÁMARA --
-        if (imagenCamara != null){
-            // Obtenemos la imagen almacenada en imagenes_capturadas
-            imageBitMap = BitmapFactory.decodeFile(imagenCamara);
-            gpuImageView.setImage(imageBitMap);
-            gpuImage.setImage(imageBitMap);
+        if (miImagen.getEstado() == 0){
+            imageBitMap = miImagen.getBitmapCamara();
         }
 
-        // -- GALERIA --
-        else if (imagenGaleria != null){
-            // descargamos de disco la imagen (filename)
-            try {
-                FileInputStream is = this.openFileInput(imagenGaleria);
-                imageBitMap = BitmapFactory.decodeStream(is);
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            gpuImageView.setImage(imageBitMap);
-            gpuImage.setImage(imageBitMap);
+        // --------------- GALERIA ---------------
+
+        else if (miImagen.getEstado() == 1){
+            imageBitMap = miImagen.getBitmapGaleria();
         }
 
-        // -- RECORTADA --
-        else if (imagenRecortada != null){
-            Log.e("d","Recibimos imagen recortada sin editar (editarFotoAvanzado) en bundleCrop ");
-            Uri myUri = Uri.parse(imagenRecortada);
-            try {
-                imageBitMap = obtenerBitMap(this.getBaseContext(),myUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            gpuImageView.setImage(imageBitMap);
-            gpuImage.setImage(imageBitMap);
+        // --------------- RECORTADA ---------------
+
+        else if (miImagen.getEstado() == 2){
+            imageBitMap = miImagen.getBitmapRecortada();
         }
 
-        // -- EDITADA  --
-        else if (imagenEditada != null){
-            Log.e("d","Recibimos imagen con filtros (editarFotoAvanzado) en bundleEditado");
-            imageBitMap = BitmapFactory.decodeFile(imagenEditada);
-            gpuImageView.setImage(imageBitMap);
-            gpuImage.setImage(imageBitMap);
+        // --------------- EDITADA ---------------
+
+        else if (miImagen.getEstado() == 3){
+            imageBitMap = miImagen.getBitmapEditada();
         }
 
-        // -- EDITADA AVANZADA --
-        else if (imagenEditadaAv != null){
-            imageBitMap = BitmapFactory.decodeFile(imagenEditadaAv);
-            gpuImageView.setImage(imageBitMap);
-            gpuImage.setImage(imageBitMap);
+        // --------------- EDITADA AV ---------------
+
+        else if (miImagen.getEstado() == 4){
+            imageBitMap = miImagen.getBitmapEditadaAv();
         }
+
+        gpuImageView.setImage(imageBitMap);
+        gpuImage.setImage(imageBitMap);
+
 
         botonAtras = findViewById(R.id.botonAtras);
 
@@ -199,8 +181,14 @@ public class EditarFotoAvanzado extends AppCompatActivity {
                     bundle.putString("bundleEditadoAv",filePath);
                 }
                 else{
+                    if (imagenEditada != null){
+                        // la enviaremos como imagenCamra porque imagenEditada espera una URI
+                        imagenCamara = imagenEditada;
+                    }
                     bundle.putString("bundleRuta",imagenCamara);
                     bundle.putString("bundleFileName",imagenGaleria);
+                    bundle.putString("bundleCrop",imagenRecortada);
+
                 }
 
                 intent.putExtras(bundle);
@@ -223,13 +211,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), DobleExposicion.class);
-                Bundle bundle = new Bundle();
-
-                bundle.putString("bundleRuta",imagenCamara);
-                bundle.putString("bundleFileName",imagenGaleria);
-
-                intent.putExtras(bundle);
-
                 startActivity(intent);
             }
         });
@@ -239,7 +220,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (bajaEficiencia == false){
+                if (miImagen.getBajaEficiencia() == false){
                     textViewGau.setText("" + i);
                     filtroGausiano.setBlurSize(range(i,0.0f,8.0f));
                     aplicarFiltroSinEsfera();
@@ -257,7 +238,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
             // recoge el valor del seekBar cuando soltamos el dedo
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (bajaEficiencia == true){
+                if (miImagen.getBajaEficiencia() == true){
                     int i = seekBar.getProgress();
                     textViewGau.setText("" + i);
                     filtroGausiano.setBlurSize(range(i,0.0f,8.0f));
@@ -286,7 +267,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (bajaEficiencia == false){
+                if (miImagen.getBajaEficiencia() == false){
                     textViewViv.setText("" + i);
                     filtroVivacidad.setVibrance(range(i,-1.2f,1.2f));
                     aplicarFiltroSinEsfera();
@@ -304,7 +285,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
             // recoge el valor del seekBar cuando soltamos el dedo
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (bajaEficiencia == true){
+                if (miImagen.getBajaEficiencia() == true){
                     int i = seekBar.getProgress();
                     textViewViv.setText("" + i);
                     filtroVivacidad.setVibrance(range(i,-1.2f,1.2f));
@@ -332,7 +313,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (bajaEficiencia == false){
+                if (miImagen.getBajaEficiencia() == false){
                     textViewGamma.setText("" + i);
                     filtroGamma.setGamma(range(i,0.0f,3.0f));
                     aplicarFiltroSinEsfera();
@@ -350,7 +331,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
             // recoge el valor del seekBar cuando soltamos el dedo
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (bajaEficiencia == true){
+                if (miImagen.getBajaEficiencia() == true){
                     int i = seekBar.getProgress();
                     textViewGamma.setText("" + i);
                     filtroGamma.setGamma(range(i,0.0f,3.0f));
@@ -378,7 +359,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (bajaEficiencia == false){
+                if (miImagen.getBajaEficiencia() == false){
                     esfera = true;
                     textViewEsfera.setText("" + i);
                     filtroEsfera.setRadius(0.5f);
@@ -398,7 +379,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
             // recoge el valor del seekBar cuando soltamos el dedo
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (bajaEficiencia == true){
+                if (miImagen.getBajaEficiencia() == true){
                     int i = seekBar.getProgress();
                     textViewEsfera.setText("" + i);
                     filtroEsfera.setRadius(0.5f);
@@ -422,7 +403,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
                 gpuImageView.requestRender();
             }
         });
-
 
     }
 
@@ -462,6 +442,11 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         editada = true;
 
         gpuImage.setFilter(filterGroup);
+
+        miImagen.setBitmapEditadaAv(gpuImage.getBitmapWithFilterApplied());
+        miImagen.setEstado(4);
+
+        esferaSeekBar.setProgress(0);
     }
 
     public boolean permisos_escritura(){
@@ -571,4 +556,5 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         }
 
     }
+
 }
