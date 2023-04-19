@@ -63,21 +63,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void abrirCamara(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        File imagenArchivo = null;
-
-        try{
-            imagenArchivo = crearImagenCamara();
-
-        } catch(IOException ex){
-            Log.e("Error", ex.toString());
-        }
-
-        if (imagenArchivo != null){
-            Uri fotoUri = FileProvider.getUriForFile(this, "tfg.proyecto.fileprovider", imagenArchivo);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,fotoUri);
-            startActivityForResult(intent,1);
+        Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (camara.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(camara, 1);
         }
     }
 
@@ -89,67 +77,43 @@ public class MainActivity extends AppCompatActivity {
     // para el resultado de la actividad
     protected void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // cámara
+
+        // ------------ CÁMARA ------------
+
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            // le enviamos a showImage la ruta de la imagen
+
             Intent intent = new Intent(this,ShowImage.class);
 
-            // necesario usar 'bundle' para que funcione
-            Bundle bundle = new Bundle();
-            // imagen cámara
-            bundle.putString("bundleRuta",imagenCamara);
-            intent.putExtras(bundle);
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            miImagen.setEstado(0); // cámara
+            miImagen.setBitmapCamara(imageBitmap);
 
             startActivity(intent);
         }
-        // galeria
+
+        // ------------ GALERIA ------------
+
         if (requestCode == 2 && resultCode == RESULT_OK) {
+
+            Intent intent = new Intent(this, ShowImage.class);
+
             Uri imagenUri = data.getData();
             Bitmap imageBitmap = null;
 
             try {
-                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imagenUri);
+                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imagenUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            // guardamos en disco el bitmap (imagenGaleria)
-            try{
-                String imagenGaleria = "bitmap.png";
-                FileOutputStream stream = this.openFileOutput(imagenGaleria, Context.MODE_PRIVATE);
-                imageBitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
 
-                stream.close();
-                imageBitmap.recycle();
+            miImagen.setEstado(1); // galeria
+            miImagen.setBitmapGaleria(imageBitmap);
 
-                Intent intent = new Intent(this,ShowImage.class);
-                // necesario usar 'bundle' para que funcione
-                Bundle bundle = new Bundle();
-                // imagen galeria
-                bundle.putString("bundleFileName",imagenGaleria);
-                intent.putExtras(bundle);
-
-                startActivity(intent);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            startActivity(intent);
         }
 
+
     }
-
-    // para generar la ruta de la imagen realizada con la camara
-    private File crearImagenCamara() throws IOException {
-        String nombreImagen = "foto_";
-        // se guarda en storage/1702-0D07/data/TFG.proyecto.files.Pictures
-        File directorio     = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imagen         = File.createTempFile(nombreImagen,".jpg",directorio);
-
-        imagenCamara = imagen.getAbsolutePath();
-        return imagen;
-    }
-
-
-
 }

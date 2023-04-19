@@ -166,6 +166,18 @@
                 android:layout_height="38dp"
                 android:text="DOBLE EXPOSICIÓN" />
 
+            <Button
+                android:id="@+id/botonBlancoyNegro"
+                android:layout_width="198dp"
+                android:layout_height="wrap_content"
+                android:text="Blanco y negro" />
+            <Button
+                android:id="@+id/restablecerBlancoYNegro"
+                android:layout_width="54dp"
+                android:layout_height="36dp"
+                android:text="X">
+            </Button>
+
 
         </LinearLayout>
 

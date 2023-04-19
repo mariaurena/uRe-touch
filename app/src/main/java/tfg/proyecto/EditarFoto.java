@@ -58,15 +58,8 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageSharpenFilter;
 
 public class EditarFoto extends Activity {
 
-    String imagenGaleria    = null;
-    String imagenCamara     = null;
-    String imagenRecortada  = null;
-    String imagenEditada    = null;
-    String imagenEditadaAv  = null;
-
-
     Bitmap imageBitMap;
-    Button botonAtras;
+    Button botonAbrir;
     Button botonRecortar;
     Button botonGuardar;
     Button filtrosAvanzados;
@@ -106,15 +99,17 @@ public class EditarFoto extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editar_foto);
 
-        Bundle bundle = getIntent().getExtras();
+       // Bundle bundle = getIntent().getExtras();
 
         miImagen = new MiImagen();
 
+        /*
         imagenCamara           = bundle.getString("bundleRuta");
         imagenGaleria          = bundle.getString("bundleFileName");
         imagenRecortada        = bundle.getString("bundleCrop");
         imagenEditada          = bundle.getString("bundleEditado");
         imagenEditadaAv        = bundle.getString("bundleEditadoAv");
+         */
 
         gpuImageView       = findViewById(R.id.gpuimageview);
 
@@ -175,17 +170,50 @@ public class EditarFoto extends Activity {
         textViewSat .setText("30");
         textViewNit .setText("30");
 
-        // -- ENVIAMOS A RECORTAR --
+        // --------------- CÁMARA ---------------
+
+        if (miImagen.getEstado() == 0){
+            imageBitMap = miImagen.getBitmapCamara();
+        }
+
+        // --------------- GALERIA ---------------
+
+        else if (miImagen.getEstado() == 1){
+            imageBitMap = miImagen.getBitmapGaleria();
+        }
+
+        // --------------- RECORTADA ---------------
+
+        else if (miImagen.getEstado() == 2){
+            imageBitMap = miImagen.getBitmapRecortada();
+        }
+
+        // --------------- EDITADA ---------------
+
+        else if (miImagen.getEstado() == 3){
+            imageBitMap = miImagen.getBitmapEditada();
+        }
+
+        // --------------- EDITADA AV ---------------
+
+        else if (miImagen.getEstado() == 4){
+            imageBitMap = miImagen.getBitmapEditadaAv();
+        }
+
+        gpuImageView.setImage(imageBitMap);
+        gpuImage.setImage(imageBitMap);
+
+        // recortar la imagen
         botonRecortar = findViewById(R.id.botonRecortar);
         botonRecortar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), RecortarImagen.class);
                 startActivity(intent);
-
             }
         });
 
+        // filtros avanzados
         filtrosAvanzados = findViewById(R.id.filtrosAvanzados);
         filtrosAvanzados.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,79 +223,12 @@ public class EditarFoto extends Activity {
             }
         });
 
-        // -- RECIBIMOS --
+        botonAbrir = findViewById(R.id.botonAbrir);
 
-        // -- CÁMARA --
-        if (imagenCamara != null){
-            // Obtenemos la imagen almacenada en imagenes_capturadas
-            imageBitMap = BitmapFactory.decodeFile(imagenCamara);
-            miImagen.setBitmapCamara(imageBitMap);
-            miImagen.setEstado(0); // camara
-            gpuImageView.setImage(miImagen.getBitmapCamara());
-            gpuImage.setImage(miImagen.getBitmapCamara());
-        }
-
-        // -- GALERIA --
-        else if (imagenGaleria != null){
-            // descargamos de disco la imagen (filename)
-            try {
-                FileInputStream is = this.openFileInput(imagenGaleria);
-                imageBitMap = BitmapFactory.decodeStream(is);
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            miImagen.setBitmapGaleria(imageBitMap);
-            miImagen.setEstado(1); // galeria
-            gpuImageView.setImage(miImagen.getBitmapGaleria());
-            gpuImage.setImage(miImagen.getBitmapGaleria());
-        }
-
-        // -- RECORTADA --
-        else if (imagenRecortada != null){
-            Uri myUri = Uri.parse(imagenRecortada);
-            Log.e("d","Recibimos imagen recortada sin editar (editarFoto) en bundleCrop ");
-            try {
-                imageBitMap = obtenerBitMap(this.getBaseContext(),myUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            miImagen.setBitmapRecortada(imageBitMap);
-            miImagen.setEstado(2); // recortada
-            gpuImageView.setImage(miImagen.getBitmapRecortada());
-            gpuImage.setImage(miImagen.getBitmapRecortada());
-        }
-
-        // -- EDITADA Y RECORTADA --
-        else if (imagenEditada != null){
-            Log.e("d","Recibimos imagen con filtros (editarFoto) en bundleEditado");
-            Uri myUri = Uri.parse(imagenEditada);
-            try {
-                imageBitMap = obtenerBitMap(this.getBaseContext(),myUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            miImagen.setBitmapEditada(imageBitMap);
-            miImagen.setEstado(3); // editada
-            gpuImageView.setImage(miImagen.getBitmapEditada());
-            gpuImage.setImage(miImagen.getBitmapEditada());
-        }
-
-        // -- EDITADA AVANZADA --
-        else if (imagenEditadaAv != null){
-            imageBitMap = BitmapFactory.decodeFile(imagenEditadaAv);
-            miImagen.setBitmapEditadaAv(imageBitMap);
-            miImagen.setEstado(4); // editada avanzada
-            gpuImageView.setImage(miImagen.getBitmapEditadaAv());
-            gpuImage.setImage(miImagen.getBitmapEditadaAv());
-        }
-
-        botonAtras = findViewById(R.id.botonAtras);
-
-        botonAtras.setOnClickListener(new View.OnClickListener() {
+        botonAbrir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ShowImage.class);
+                Intent intent = new Intent(view.getContext(), MainActivity.class);
 
                 startActivity(intent);
             }

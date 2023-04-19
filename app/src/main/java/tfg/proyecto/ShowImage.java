@@ -19,6 +19,8 @@ public class ShowImage extends Activity {
     Bitmap imageBitMap = null;
     String imagenGaleria;
 
+    MiImagen miImagen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +29,8 @@ public class ShowImage extends Activity {
         imgView = findViewById(R.id.muestraImagen);
 
         botonNo = findViewById(R.id.botonNo);
+
+        miImagen = new MiImagen();
 
         botonNo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,33 +42,16 @@ public class ShowImage extends Activity {
 
         botonSi = findViewById(R.id.botonSi);
 
-        Bundle bundle = getIntent().getExtras();
-        imagenCamara  = bundle.getString("bundleRuta");
-        imagenGaleria = bundle.getString("bundleFileName");
+        // --------------- CÁMARA ---------------
 
-        // cámara
-        if (imagenCamara != null){
-            // Obtenemos la imagen almacenada en imagenes_capturadas
-            Bitmap imgBitmap = BitmapFactory.decodeFile(imagenCamara);
-            imgView.setImageBitmap(imgBitmap);
+        if (miImagen.getEstado() == 0){
+            imgView.setImageBitmap(miImagen.getBitmapCamara());
+        }
 
-        }
-        // galeria
-        else if (imagenGaleria != null){
-            // descargamos de disco la imagen (filename)
-            try {
-                FileInputStream is = this.openFileInput(imagenGaleria);
-                imageBitMap = BitmapFactory.decodeStream(is);
-                is.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            imgView.setImageBitmap(imageBitMap);
-        }
-        // seguramente estamos recibiendo la imagen recortada
-        else{
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+        // --------------- GALERIA ---------------
+
+        if (miImagen.getEstado() == 1){
+            imgView.setImageBitmap(miImagen.getBitmapGaleria());
         }
 
         botonSi.setOnClickListener(new View.OnClickListener() {

@@ -63,13 +63,15 @@ public class EditarFotoAvanzado extends AppCompatActivity {
     Button botonAtras;
     Button botonGuardar;
     Button dobleExposicion;
+    Button botonByN;
 
-    Boolean esfera = false;
+    Boolean byn    = false;
 
     Button restablecerGau;
     Button restablecerViv;
     Button restablecerGamma;
     Button restablecerEsfera;
+    Button restablecerByN;
 
     Boolean editada = false;
 
@@ -82,7 +84,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
     SeekBar vivacidadSeekBar;
     SeekBar gammaSeekBar;
     SeekBar esferaSeekBar;
-    SeekBar halftoneSeekBar;
 
     TextView textViewGau;
     TextView textViewViv;
@@ -93,6 +94,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
     GPUImageVibranceFilter           filtroVivacidad;
     GPUImageGammaFilter              filtroGamma;
     GPUImageSphereRefractionFilter   filtroEsfera;
+    GPUImageGrayscaleFilter          filtroByN;
 
     MiImagen miImagen;
 
@@ -109,6 +111,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         filtroVivacidad   = new GPUImageVibranceFilter();
         filtroGamma       = new GPUImageGammaFilter();
         filtroEsfera      = new GPUImageSphereRefractionFilter();
+        filtroByN         = new GPUImageGrayscaleFilter();
 
         gaussianSeekBar   = findViewById(R.id.seekbarGaussian);
         vivacidadSeekBar  = findViewById(R.id.seekbarVivacidad);
@@ -124,6 +127,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         restablecerViv      = findViewById(R.id.restablecerViv);
         restablecerGamma    = findViewById(R.id.restablecerGamma);
         restablecerEsfera   = findViewById(R.id.restablecerEsfera);
+        restablecerByN      = findViewById(R.id.restablecerBlancoYNegro);
 
         textViewGau       .setText("0");
         textViewViv       .setText("30");
@@ -165,7 +169,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         gpuImageView.setImage(imageBitMap);
         gpuImage.setImage(imageBitMap);
 
-
         botonAtras = findViewById(R.id.botonAtras);
 
         botonAtras.setOnClickListener(new View.OnClickListener() {
@@ -182,12 +185,18 @@ public class EditarFotoAvanzado extends AppCompatActivity {
                 }
                 else{
                     if (imagenEditada != null){
-                        // la enviaremos como imagenCamra porque imagenEditada espera una URI
+                        // la enviaremos como imagenCamara porque imagenEditada espera una URI
                         imagenCamara = imagenEditada;
+                        Log.e("d","enviamos editada");
                     }
+                    imagenCamara = miImagen.getBitmapCamara().toString();
+                    Log.e("d","enviamos demas");
                     bundle.putString("bundleRuta",imagenCamara);
+                    Log.e("imagenCamara",imagenCamara);
                     bundle.putString("bundleFileName",imagenGaleria);
+                   // Log.e("imagenGaleria",imagenGaleria);
                     bundle.putString("bundleCrop",imagenRecortada);
+                  //  Log.e("imagenRecortada",imagenRecortada);
 
                 }
 
@@ -360,7 +369,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (miImagen.getBajaEficiencia() == false){
-                    esfera = true;
                     textViewEsfera.setText("" + i);
                     filtroEsfera.setRadius(0.5f);
                     filtroEsfera.setRefractiveIndex(range(i,0.0f,1.0f));
@@ -395,7 +403,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         restablecerEsfera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                esfera = false;
                 textViewEsfera.setText("0");
                 esferaSeekBar.setProgress(0);
                 aplicarFiltroSinEsfera();
@@ -403,6 +410,31 @@ public class EditarFotoAvanzado extends AppCompatActivity {
                 gpuImageView.requestRender();
             }
         });
+
+        botonByN = findViewById(R.id.botonBlancoyNegro);
+
+        botonByN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                byn = true;
+                aplicarFiltroConByn();
+                gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
+                gpuImageView.requestRender();
+            }
+        });
+
+        restablecerByN = findViewById(R.id.restablecerBlancoYNegro);
+
+        restablecerByN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                byn = false;
+                aplicarFiltroSinEsfera();
+                gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
+                gpuImageView.requestRender();
+            }
+        });
+
 
     }
 
@@ -439,6 +471,26 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         filterGroup.addFilter(filtroVivacidad);
         filterGroup.addFilter(filtroGamma);
 
+        if (byn == true){
+            filterGroup.addFilter(filtroByN);
+        }
+
+        editada = true;
+
+        gpuImage.setFilter(filterGroup);
+
+        miImagen.setBitmapEditadaAv(gpuImage.getBitmapWithFilterApplied());
+        miImagen.setEstado(4);
+    }
+
+    public void aplicarFiltroConByn(){
+        GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
+
+        filterGroup.addFilter(filtroGausiano);
+        filterGroup.addFilter(filtroVivacidad);
+        filterGroup.addFilter(filtroGamma);
+        filterGroup.addFilter(filtroByN);
+
         editada = true;
 
         gpuImage.setFilter(filterGroup);
@@ -446,7 +498,6 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         miImagen.setBitmapEditadaAv(gpuImage.getBitmapWithFilterApplied());
         miImagen.setEstado(4);
 
-        esferaSeekBar.setProgress(0);
     }
 
     public boolean permisos_escritura(){

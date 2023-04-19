@@ -86,17 +86,6 @@ public class RecortarImagen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recortar_imagen);
 
-        /*
-
-        Bundle bundle   = getIntent().getExtras();
-        imagenCamara    = bundle.getString("bundleRuta");
-        imagenGaleria   = bundle.getString("bundleFileName");
-        imagenRecortada = bundle.getString("bundleCrop");
-        imagenEditada   = bundle.getString("bundleEditado");
-        imagenEditadaAv = bundle.getString("bundleEditadoAv");
-
-         */
-
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
 
         miImagen = new MiImagen();
@@ -130,7 +119,6 @@ public class RecortarImagen extends AppCompatActivity {
         else if (miImagen.getEstado() == 4){
             imageBitMap = miImagen.getBitmapEditadaAv();
         }
-
 
         uriARecortar = getImageUri(getBaseContext(),imageBitMap);
 
@@ -242,22 +230,18 @@ public class RecortarImagen extends AppCompatActivity {
             if (resultUri != null) {
 
                 Intent intent = new Intent(getApplicationContext(), EditarFoto.class);
-                Bundle bundle = new Bundle();
 
                 Bitmap bitmapRecortada = null;
 
-                //-- ENVIAMOS --
-                if (imagenEditada == null){
-                    Log.e("imagen en recortar es: ",resultUri.toString());
-                    bundle.putString("bundleCrop",resultUri.toString());
-                    Log.e("s","envio imagen recortada sin editar en bundleCrop (recortarImagen)");
+                try {
+                    bitmapRecortada = obtenerBitMap(this.getBaseContext(),resultUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                else{
-                    bundle.putString("bundleEditado",resultUri.toString());
-                    bundle.putString("bundleCrop",resultUri.toString());
-                    Log.e("s","envio imagen recortada y editada (recortarImagen) en bundleEditado");
-                }
-                intent.putExtras(bundle);
+
+                miImagen.setBitmapRecortada(bitmapRecortada);
+                miImagen.setEstado(2);
+
                 startActivity(intent);
 
             }
@@ -269,7 +253,6 @@ public class RecortarImagen extends AppCompatActivity {
             }
 
         } else if (requestCode == UCrop.REQUEST_CROP && resultCode == UCrop.RESULT_ERROR) {
-
             // Maneja el error en caso de que ocurra
             Throwable cropError = UCrop.getError(data);
             Log.e("Error onActivityResult",cropError.getMessage());

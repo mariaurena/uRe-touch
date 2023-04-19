@@ -17,10 +17,10 @@
           android:orientation="vertical">
 
           <Button
-              android:id="@+id/botonAtras"
+              android:id="@+id/botonAbrir"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="ATRAS" />
+              android:text="ABRIR" />
 
 
           <jp.co.cyberagent.android.gpuimage.GPUImageView
