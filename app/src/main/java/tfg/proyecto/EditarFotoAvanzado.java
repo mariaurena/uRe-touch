@@ -467,6 +467,7 @@ public class EditarFotoAvanzado extends AppCompatActivity {
     public void aplicarFiltroSinEsfera(){
         GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
 
+        filtroGausiano.setBlurSize(0.0f);
         filterGroup.addFilter(filtroGausiano);
         filterGroup.addFilter(filtroVivacidad);
         filterGroup.addFilter(filtroGamma);

@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tfg.proyecto.MainActivity"
-    android:orientation="vertical"
-    android:exported="true">
-
+    tools:context="tfg.proyecto.MainActivity">
 
     <Button
         android:id="@+id/botonCamara"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/botonCamara" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+      />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/icono_add"
+        app:layout_constraintTop_toBottomOf="@id/botonCamara"
+        app:layout_constraintBottom_toTopOf="@id/botonGaleria"/>/>
 
     <Button
         android:id="@+id/botonGaleria"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/botonGaleria" />
-
-    <ImageView
-        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="331dp" />
-</LinearLayout>
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

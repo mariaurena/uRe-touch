@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -15,8 +16,7 @@ import java.io.FileInputStream;
 public class ShowImage extends Activity {
     ImageView imgView;
     String imagenCamara;
-    Button botonNo,botonSi,botonAtras;
-    Bitmap imageBitMap = null;
+    Button botonNo,botonSi;
     String imagenGaleria;
 
     MiImagen miImagen;
@@ -28,9 +28,10 @@ public class ShowImage extends Activity {
 
         imgView = findViewById(R.id.muestraImagen);
 
-        botonNo = findViewById(R.id.botonNo);
-
         miImagen = new MiImagen();
+
+        botonNo = findViewById(R.id.botonNo);
+        botonNo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.back_botton, 0, 0);
 
         botonNo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,10 +42,16 @@ public class ShowImage extends Activity {
         });
 
         botonSi = findViewById(R.id.botonSi);
+        botonSi.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.check_botton, 0, 0);
 
         // --------------- CÁMARA ---------------
 
         if (miImagen.getEstado() == 0){
+            imgView.setImageBitmap(miImagen.getBitmapCamara());
+            int width = imgView.getWidth();
+            int height = imgView.getHeight();
+            //Bitmap scaleBitmap = Bitmap.createScaledBitmap(miImagen.getBitmapCamara(),width,height,false);
+            //imgView.setImageBitmap(scaleBitmap);
             imgView.setImageBitmap(miImagen.getBitmapCamara());
         }
 
@@ -53,6 +60,7 @@ public class ShowImage extends Activity {
         if (miImagen.getEstado() == 1){
             imgView.setImageBitmap(miImagen.getBitmapGaleria());
         }
+
 
         botonSi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,16 +73,6 @@ public class ShowImage extends Activity {
                 // imagen galeria
                 bundle.putString("bundleFileName",imagenGaleria);
                 intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
-        botonAtras = findViewById(R.id.botonAtras);
-
-        botonAtras.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), MainActivity.class);
                 startActivity(intent);
             }
         });

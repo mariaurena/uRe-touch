@@ -15,23 +15,37 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+
+import androidx.appcompat.widget.Toolbar;
+
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
 import com.mayank.simplecropview.CropImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -56,13 +70,22 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageSaturationFilter;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageSharpenFilter;
 
 
-public class EditarFoto extends Activity {
+
+public class EditarFoto extends AppCompatActivity {
+
+    ImageView imgView;
 
     Bitmap imageBitMap;
+
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+
+    Button botonFiltros;
     Button botonAbrir;
     Button botonRecortar;
     Button botonGuardar;
     Button filtrosAvanzados;
+    Button dobleExposicion;
 
     Button restablecerExpo;
     Button restablecerContraste;
@@ -99,9 +122,42 @@ public class EditarFoto extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editar_foto);
 
-       // Bundle bundle = getIntent().getExtras();
+        setToolBar();
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navview);
+
+        //navigationView.inflateMenu(R.menu.nav_options);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case android.R.id.home:
+                        drawerLayout.openDrawer(GravityCompat.START);
+                        return true;
+                    case R.id.exposicion:
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
+                        item.setChecked(false);
+                        return true;
+                }
+
+                return onOptionsItemSelected(item);
+            }
+        });
+
+        imgView = findViewById(R.id.muestraImagen);
 
         miImagen = new MiImagen();
+
+        dobleExposicion = findViewById(R.id.botonDobleExposicion);
+        dobleExposicion.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.doble_exposicion_botton, 0, 0);
+        dobleExposicion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), DobleExposicion.class);
+                startActivity(intent);
+            }
+        });
 
         /*
         imagenCamara           = bundle.getString("bundleRuta");
@@ -109,9 +165,7 @@ public class EditarFoto extends Activity {
         imagenRecortada        = bundle.getString("bundleCrop");
         imagenEditada          = bundle.getString("bundleEditado");
         imagenEditadaAv        = bundle.getString("bundleEditadoAv");
-         */
 
-        gpuImageView       = findViewById(R.id.gpuimageview);
 
         exposicionSeekBar  = findViewById(R.id.seekbarExposicion);
         contrasteSeekBar   = findViewById(R.id.seekbarContraste);
@@ -130,6 +184,10 @@ public class EditarFoto extends Activity {
         restablecerBrillo     = findViewById(R.id.restablecerBrillo);
         restablecerSaturacion = findViewById(R.id.restablecerSaturacion);
         restablecerNitidez    = findViewById(R.id.restablecerNitidez);
+
+         */
+
+        gpuImageView = new GPUImageView(this);
 
         gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
@@ -154,6 +212,7 @@ public class EditarFoto extends Activity {
         filtroNit = new GPUImageSharpenFilter();
         filtroNit.setSharpness(0.0f);
 
+        /*
         textViewExpo = findViewById(R.id.textViewExpo);
         textViewCon  = findViewById(R.id.textViewCon);
         textViewSom  = findViewById(R.id.textViewSom);
@@ -162,6 +221,7 @@ public class EditarFoto extends Activity {
         textViewSat  = findViewById(R.id.textViewSat);
         textViewNit  = findViewById(R.id.textViewNit);
 
+
         textViewExpo.setText("30");
         textViewCon .setText("30");
         textViewSom .setText("0");
@@ -169,6 +229,8 @@ public class EditarFoto extends Activity {
         textViewBr  .setText("30");
         textViewSat .setText("30");
         textViewNit .setText("30");
+
+         */
 
         // --------------- CÁMARA ---------------
 
@@ -200,11 +262,15 @@ public class EditarFoto extends Activity {
             imageBitMap = miImagen.getBitmapEditadaAv();
         }
 
+        imgView.setImageBitmap(imageBitMap);
+
         gpuImageView.setImage(imageBitMap);
         gpuImage.setImage(imageBitMap);
 
         // recortar la imagen
         botonRecortar = findViewById(R.id.botonRecortar);
+        botonRecortar.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.crop_botton, 0, 0);
+
         botonRecortar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -213,6 +279,9 @@ public class EditarFoto extends Activity {
             }
         });
 
+
+
+        /*
         // filtros avanzados
         filtrosAvanzados = findViewById(R.id.filtrosAvanzados);
         filtrosAvanzados.setOnClickListener(new View.OnClickListener() {
@@ -234,14 +303,17 @@ public class EditarFoto extends Activity {
             }
         });
 
-        botonGuardar = findViewById(R.id.botonGuardar);
+         */
 
+        botonGuardar = findViewById(R.id.botonGuardar);
+        botonGuardar.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.save_botton,0,0);
         botonGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveImage();
             }
         });
+        /*
 
         // -- exposición --
         ((SeekBar) findViewById(R.id.seekbarExposicion)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -567,6 +639,8 @@ public class EditarFoto extends Activity {
             }
         });
 
+         */
+
     }
 
     protected float range(final float percentage, final float start, final float end) {
@@ -576,7 +650,7 @@ public class EditarFoto extends Activity {
     public void saveImage(){
 
         if (permisos_escritura() && permisos_lectura()) {
-            Bitmap bitmap = gpuImageView.getGPUImage().getBitmapWithFilterApplied();
+            Bitmap bitmap = gpuImage.getBitmapWithFilterApplied();
             String displayName = "imagen_editada";
 
             // Insertar la imagen en la Galería de Android
@@ -702,8 +776,29 @@ public class EditarFoto extends Activity {
         return bitmap;
     }
 
+    private void setToolBar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu_botton);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.exposicion:
+                Log.e("d","holaa");
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 
 }
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:title="FILTROS BÁSICOS">
+            <menu>
+                <item
+                    android:id="@+id/exposicion"
+                    android:title="EXPOSICIÓN" />
+
+                <item
+                    android:id="@+id/contraste"
+                    android:title="CONTRASTE" />
+
+                <item
+                    android:id="@+id/sombras"
+                    android:title="SOMBRAS" />
+
+                <item
+                    android:id="@+id/luces"
+                    android:title="LUCES" />
+
+                <item
+                    android:id="@+id/brillo"
+                    android:title="BRILLO" />
+
+                <item
+                    android:id="@+id/saturación"
+                    android:title="SATURACIÓN" />
+
+                <item
+                    android:id="@+id/nitidez"
+                    android:title="NITIDEZ" />
+            </menu>
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:title="FILTROS AVANZADOS">
+            <menu>
+                <item
+                    android:id="@+id/gaussiano"
+                    android:title="GAUSSIANO" />
+
+                <item
+                    android:id="@+id/vivacidad"
+                    android:title="VIVACIDAD" />
+
+                <item
+                    android:id="@+id/gamma"
+                    android:title="GAMMA" />
+
+                <item
+                    android:id="@+id/esfera"
+                    android:title="ESFERA" />
+
+                <item
+                    android:id="@+id/byn"
+                    android:title="BLANCO Y NEGRO" />
+
+            </menu>
+        </item>
+    </group>
+</menu>
