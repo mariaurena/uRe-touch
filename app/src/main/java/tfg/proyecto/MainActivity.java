@@ -159,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
             miImagen.setEstado(0); // cámara
             miImagen.setBitmapCamara(imageBitmap);
 
+            // para cuando queramos acceder a la imagen sin editar
+            miImagen.setBitmapSinFiltro(imageBitmap);
+
             startActivity(intent);
         }
 
@@ -179,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
 
             miImagen.setEstado(1); // galeria
             miImagen.setBitmapGaleria(imageBitmap);
+
+            // para cuando queramos acceder a la imagen sin editar
+            miImagen.setBitmapSinFiltro(imageBitmap);
 
             startActivity(intent);
         }

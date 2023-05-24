@@ -26,6 +26,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -39,11 +40,12 @@ public class DobleExposicion extends AppCompatActivity {
 
     MiImagen miImagen;
 
+    ImageView imgView;
+
     GPUImage     gpuImage;
     GPUImageView gpuImageView;
 
     Button exportar;
-    Button botonGuardar;
 
     Bitmap imagenRecibida;
     Bitmap imagenElegidaGaleria;
@@ -63,9 +65,11 @@ public class DobleExposicion extends AppCompatActivity {
 
         gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
-        gpuImageView    = findViewById(R.id.gpuimageview);
+        gpuImageView = new GPUImageView(this);
         exportar        = findViewById(R.id.exportar);
         seekbarBlend    = findViewById(R.id.seekbarBlend);
+
+        imgView = findViewById(R.id.muestraImagen);
 
         seekbarBlend.setVisibility(View.GONE); // al principio no la mostramos
 
@@ -98,13 +102,15 @@ public class DobleExposicion extends AppCompatActivity {
             imagenRecibida = miImagen.getBitmapEditada();
         }
 
-        // --------------- EDITADA AV ---------------
+        // --------------- ORIGINAL ---------------
 
         else if (miImagen.getEstado() == 4){
-            imagenRecibida = miImagen.getBitmapEditadaAv();
+            imagenRecibida = miImagen.getBitmapSinFiltro();
         }
 
         gpuImageView.setImage(imagenRecibida);
+
+        imgView.setImageBitmap(imagenRecibida);
 
         exportar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -113,14 +119,6 @@ public class DobleExposicion extends AppCompatActivity {
             }
         });
 
-        botonGuardar = findViewById(R.id.botonGuardar);
-
-        botonGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveImage();
-            }
-        });
 
         seekbarBlend.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -179,6 +177,7 @@ public class DobleExposicion extends AppCompatActivity {
                 Bitmap blendedBitmap = gpuImage.getBitmapWithFilterApplied();
 
                 gpuImageView.setImage(blendedBitmap);
+                imgView.setImageBitmap(blendedBitmap);
 
                 //mostramos la seekBar para ajustar la opacidad
                 seekbarBlend.setVisibility(View.VISIBLE);
@@ -200,7 +199,8 @@ public class DobleExposicion extends AppCompatActivity {
         gpuImage.setImage(imagenElegidaResize);
         Bitmap blendedBitmap = gpuImage.getBitmapWithFilterApplied();
 
-        gpuImageView.setImage(blendedBitmap);
+       // gpuImageView.setImage(blendedBitmap);
+        imgView.setImageBitmap(blendedBitmap);
 
         gpuImage.setFilter(filterGroup);
 
@@ -208,35 +208,6 @@ public class DobleExposicion extends AppCompatActivity {
 
     protected float range(final float percentage, final float start, final float end) {
         return (end - start) * percentage / 100.0f + start;
-    }
-
-    public void saveImage(){
-
-        if (permisos_escritura() && permisos_lectura()) {
-            Bitmap bitmap = gpuImageView.getGPUImage().getBitmapWithFilterApplied();
-            String displayName = "imagen_editada";
-
-            // Insertar la imagen en la Galería de Android
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.DISPLAY_NAME, displayName);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
-            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-
-            Uri imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            // Guardar la imagen en la Galería de Android
-            try {
-                OutputStream imageOut = getContentResolver().openOutputStream(imageUri);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageOut);
-                imageOut.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            Toast.makeText(this, "La imagen se ha guardado en la galería", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     // pedimos permisos de escritura en tiempo de ejecución (necesario a partir de Android 11 API 30)

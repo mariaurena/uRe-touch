@@ -95,6 +95,8 @@ public class EditarFoto extends AppCompatActivity {
     Button restablecerSaturacion;
     Button restablecerNitidez;
 
+    Button volverOriginal;
+
     GPUImage gpuImage;
     GPUImageView gpuImageView;
     SeekBar exposicionSeekBar,contrasteSeekBar,sombrasSeekBar,lucesSeekBar,brilloSeekBar,satSeekBar,nitSeekBar;
@@ -122,11 +124,60 @@ public class EditarFoto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editar_foto);
 
+        miImagen = new MiImagen();
+        imgView = findViewById(R.id.muestraImagen);
+        //gpuImageView = new GPUImageView(this);
+        //gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
+
+        // --------------- CÁMARA ---------------
+
+        if (miImagen.getEstado() == 0){
+            imageBitMap = miImagen.getBitmapCamara();
+        }
+
+        // --------------- GALERIA ---------------
+
+        else if (miImagen.getEstado() == 1){
+            imageBitMap = miImagen.getBitmapGaleria();
+        }
+
+        // --------------- RECORTADA ---------------
+
+        else if (miImagen.getEstado() == 2){
+            imageBitMap = miImagen.getBitmapRecortada();
+        }
+
+        // --------------- EDITADA ---------------
+
+        else if (miImagen.getEstado() == 3){
+            imageBitMap = miImagen.getBitmapEditada();
+        }
+
+        // --------------- ORIGINAL ---------------
+        else if (miImagen.getEstado() == 4){
+            imageBitMap = miImagen.getBitmapSinFiltro();
+        }
+
+        imgView.setImageBitmap(imageBitMap);
+
+        // la pondremos en la categoria de "editada" por ejemplo
+        miImagen.setBitmapEditada(imageBitMap);
+        miImagen.setEstado(3);
+
         setToolBar();
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navview);
 
-        //navigationView.inflateMenu(R.menu.nav_options);
+        volverOriginal = findViewById(R.id.volverOriginal);
+        volverOriginal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                miImagen.setEstado(4);
+                imageBitMap = miImagen.getBitmapSinFiltro();
+                imgView.setImageBitmap(imageBitMap);
+            }
+        });
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -135,8 +186,77 @@ public class EditarFoto extends AppCompatActivity {
                         drawerLayout.openDrawer(GravityCompat.START);
                         return true;
                     case R.id.exposicion:
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        Intent intent = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent.putExtra("tipoFiltro",0);
+                        Log.e("d","mando 0");
                         startActivity(intent);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.contraste:
+                        Intent intent1 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent1.putExtra("tipoFiltro",1);
+                        Log.e("d","mando 1");
+                        startActivity(intent1);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.sombras:
+                        Intent intent2 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent2.putExtra("tipoFiltro",2);
+                        startActivity(intent2);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.luces:
+                        Intent intent3 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent3.putExtra("tipoFiltro",3);
+                        startActivity(intent3);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.brillo:
+                        Intent intent4 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent4.putExtra("tipoFiltro",4);
+                        startActivity(intent4);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.saturación:
+                        Intent intent5 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent5.putExtra("tipoFiltro",5);
+                        startActivity(intent5);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.nitidez:
+                        Intent intent6 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent6.putExtra("tipoFiltro",6);
+                        startActivity(intent6);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.gaussiano:
+                        Intent intent7 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent7.putExtra("tipoFiltro",7);
+                        startActivity(intent7);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.vivacidad:
+                        Intent intent8 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent8.putExtra("tipoFiltro",8);
+                        startActivity(intent8);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.gamma:
+                        Intent intent9 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent9.putExtra("tipoFiltro",9);
+                        startActivity(intent9);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.esfera:
+                        Intent intent10 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent10.putExtra("tipoFiltro",10);
+                        startActivity(intent10);
+                        item.setChecked(false);
+                        return true;
+                    case R.id.byn:
+                        Intent intent11 = new Intent(getBaseContext(), aplicarFiltro.class);
+                        intent11.putExtra("tipoFiltro",11);
+                        startActivity(intent11);
                         item.setChecked(false);
                         return true;
                 }
@@ -144,10 +264,6 @@ public class EditarFoto extends AppCompatActivity {
                 return onOptionsItemSelected(item);
             }
         });
-
-        imgView = findViewById(R.id.muestraImagen);
-
-        miImagen = new MiImagen();
 
         dobleExposicion = findViewById(R.id.botonDobleExposicion);
         dobleExposicion.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.doble_exposicion_botton, 0, 0);
@@ -186,10 +302,6 @@ public class EditarFoto extends AppCompatActivity {
         restablecerNitidez    = findViewById(R.id.restablecerNitidez);
 
          */
-
-        gpuImageView = new GPUImageView(this);
-
-        gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
         filtroExposición = new GPUImageExposureFilter();
         filtroExposición.setExposure(0.0f);
@@ -232,40 +344,7 @@ public class EditarFoto extends AppCompatActivity {
 
          */
 
-        // --------------- CÁMARA ---------------
 
-        if (miImagen.getEstado() == 0){
-            imageBitMap = miImagen.getBitmapCamara();
-        }
-
-        // --------------- GALERIA ---------------
-
-        else if (miImagen.getEstado() == 1){
-            imageBitMap = miImagen.getBitmapGaleria();
-        }
-
-        // --------------- RECORTADA ---------------
-
-        else if (miImagen.getEstado() == 2){
-            imageBitMap = miImagen.getBitmapRecortada();
-        }
-
-        // --------------- EDITADA ---------------
-
-        else if (miImagen.getEstado() == 3){
-            imageBitMap = miImagen.getBitmapEditada();
-        }
-
-        // --------------- EDITADA AV ---------------
-
-        else if (miImagen.getEstado() == 4){
-            imageBitMap = miImagen.getBitmapEditadaAv();
-        }
-
-        imgView.setImageBitmap(imageBitMap);
-
-        gpuImageView.setImage(imageBitMap);
-        gpuImage.setImage(imageBitMap);
 
         // recortar la imagen
         botonRecortar = findViewById(R.id.botonRecortar);
@@ -650,7 +729,7 @@ public class EditarFoto extends AppCompatActivity {
     public void saveImage(){
 
         if (permisos_escritura() && permisos_lectura()) {
-            Bitmap bitmap = gpuImage.getBitmapWithFilterApplied();
+            Bitmap bitmap = imageBitMap;
             String displayName = "imagen_editada";
 
             // Insertar la imagen en la Galería de Android

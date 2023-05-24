@@ -52,6 +52,8 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageVibranceFilter;
 
 public class EditarFotoAvanzado extends AppCompatActivity {
 
+    /*
+
     String imagenGaleria    = null;
     String imagenCamara     = null;
     String imagenRecortada  = null;
@@ -608,5 +610,8 @@ public class EditarFotoAvanzado extends AppCompatActivity {
         }
 
     }
+
+
+     */
 
 }

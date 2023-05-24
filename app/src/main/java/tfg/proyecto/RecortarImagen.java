@@ -114,10 +114,9 @@ public class RecortarImagen extends AppCompatActivity {
             imageBitMap = miImagen.getBitmapEditada();
         }
 
-        // --------------- EDITADA AV ---------------
-
+        // --------------- ORIGINAL ---------------
         else if (miImagen.getEstado() == 4){
-            imageBitMap = miImagen.getBitmapEditadaAv();
+            imageBitMap = miImagen.getBitmapSinFiltro();
         }
 
         uriARecortar = getImageUri(getBaseContext(),imageBitMap);

@@ -13,6 +13,7 @@ public class MiImagen {
     public static Bitmap bitmapRecortada;
     public static Bitmap bitmapEditada;
     public static Bitmap bitmapEditadaAv;
+    public static Bitmap bitmapSinFiltro;
 
     // Estado de la imagen
     // -1 : no válida
@@ -20,16 +21,15 @@ public class MiImagen {
     //  1 : imagen galeria
     //  2 : imagen recortada
     //  3 : imagen editada
-    //  4 : imagen editada avanzada
+    //  4 : imagen sin editar
+
     public static int estado = -1;
 
     public static Boolean bajaEficiencia = false;
 
     // ------------------------ SET ------------------------
 
-    public void setBitmapCamara(Bitmap bit){
-        this.bitmapCamara = bit;
-    }
+    public void setBitmapCamara(Bitmap bit){ this.bitmapCamara = bit;}
 
     public void setBitmapGaleria(Bitmap bit){
         this.bitmapGaleria = bit;
@@ -43,9 +43,7 @@ public class MiImagen {
         this.bitmapEditada = bit;
     }
 
-    public void setBitmapEditadaAv(Bitmap bit){
-        this.bitmapEditadaAv = bit;
-    }
+    public void setBitmapSinFiltro(Bitmap bit){ this.bitmapSinFiltro = bit;}
 
     public void setEstado(int estado){
         this.estado = estado;
@@ -70,8 +68,8 @@ public class MiImagen {
         return this.bitmapEditada;
     }
 
-    public Bitmap getBitmapEditadaAv(){
-        return this.bitmapEditadaAv;
+    public Bitmap getBitmapSinFiltro(){
+        return this.bitmapSinFiltro;
     }
 
     public int getEstado(){
@@ -81,6 +79,7 @@ public class MiImagen {
     public Boolean getBajaEficiencia(){
         return this.bajaEficiencia;
     }
+
 
 
 }

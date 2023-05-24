@@ -5,46 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:exported="true">
 
-    <ScrollView
+<!--
+    <jp.co.cyberagent.android.gpuimage.GPUImageView
+        android:id="@+id/gpuimageview"
+        android:layout_width="406dp"
+        android:layout_height="354dp"
+        app:gpuimage_show_loading="false"
+        app:gpuimage_surface_type="texture_view" />
+     -->
+
+    <ImageView
+        android:id="@+id/muestraImagen"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_centerInParent="true"
+        android:scaleType="centerInside"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/exportar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:text="EXPORTAR IMAGEN DESDE GALERIA" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <SeekBar
+        android:id="@+id/seekbarBlend"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:max="60"
+        android:progress="30" />
 
-
-            <jp.co.cyberagent.android.gpuimage.GPUImageView
-                android:id="@+id/gpuimageview"
-                android:layout_width="406dp"
-                android:layout_height="354dp"
-                app:gpuimage_show_loading="false"
-                app:gpuimage_surface_type="texture_view" />
-
-            <Button
-                android:id="@+id/exportar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="EXPORTAR IMAGEN DESDE GALERIA" />
-
-            <SeekBar
-                android:id="@+id/seekbarBlend"
-                android:layout_width="370dp"
-                android:layout_height="wrap_content"
-                android:max="60"
-                android:progress="30" />
-
-            <Button
-                android:id="@+id/botonGuardar"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:text="GUARDAR" />
-
-        </LinearLayout>
-
-    </ScrollView>
 
 </LinearLayout>

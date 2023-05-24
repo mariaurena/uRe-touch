@@ -15,11 +15,30 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="362dp"
-                android:layout_height="66dp"
-                android:gravity="left" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="300dp"
+                    android:layout_height="66dp"
+                    android:gravity="left" />
+
+                <Button
+                    android:id="@+id/volverOriginal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="66dp"
+                    android:drawableTop="@drawable/restablecer_botton"
+                    android:background="@android:color/transparent">
+
+                </Button>
+
+            </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"
