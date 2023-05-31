@@ -56,12 +56,6 @@ import java.util.Date;
 
 public class RecortarImagen extends AppCompatActivity {
 
-    String imagenGaleria    = null;
-    String imagenCamara     = null;
-    String imagenRecortada  = null;
-    String imagenEditada    = null;
-    String imagenEditadaAv  = null;
-
     Bitmap imageBitMap;
     CropImageView mCropView;
     ImageView cropImage;
@@ -90,34 +84,7 @@ public class RecortarImagen extends AppCompatActivity {
 
         miImagen = new MiImagen();
 
-        // --------------- CÁMARA ---------------
-
-        if (miImagen.getEstado() == 0){
-            imageBitMap = miImagen.getBitmapCamara();
-        }
-
-        // --------------- GALERIA ---------------
-
-        else if (miImagen.getEstado() == 1){
-            imageBitMap = miImagen.getBitmapGaleria();
-        }
-
-        // --------------- RECORTADA ---------------
-
-        else if (miImagen.getEstado() == 2){
-            imageBitMap = miImagen.getBitmapRecortada();
-        }
-
-        // --------------- EDITADA ---------------
-
-        else if (miImagen.getEstado() == 3){
-            imageBitMap = miImagen.getBitmapEditada();
-        }
-
-        // --------------- ORIGINAL ---------------
-        else if (miImagen.getEstado() == 4){
-            imageBitMap = miImagen.getBitmapSinFiltro();
-        }
+        imageBitMap = miImagen.getBitmapActual();
 
         uriARecortar = getImageUri(getBaseContext(),imageBitMap);
 
@@ -238,9 +205,14 @@ public class RecortarImagen extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                /*
+
                 miImagen.setBitmapRecortada(bitmapRecortada);
                 miImagen.setEstado(2);
 
+                 */
+
+                miImagen.addVersion(bitmapRecortada);
                 startActivity(intent);
 
             }

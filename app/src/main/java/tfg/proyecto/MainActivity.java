@@ -60,9 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     File tempFile = null;
 
-    private CameraManager cameraManager;
-    private String cameraId;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
         botonCamara = findViewById(R.id.botonCamara);
         botonCamara.setHeight(desiredHeight);
 
-        botonCamara.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.add_botton, 0, 0);
-        botonCamara.setText("Pulsa aqui para hacer una foto");
-        botonCamara.setTextColor(getResources().getColor(R.color.icono_add));
+        botonCamara.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.camera_button, 0, 0);
+        botonCamara.setText("Capturar una foto");
+        botonCamara.setTextColor(getResources().getColor(R.color.gris));
 
         botonCamara.setPadding(0, desiredHeight/3, 0, 0);
 
@@ -104,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
         int secondHalfHeight = screenHeight - desiredHeight;
         botonGaleria.setHeight(secondHalfHeight);
 
-        botonGaleria.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.add_botton, 0, 0);
-        botonGaleria.setText("Pulsa aqui para cargar la imagen");
-        botonGaleria.setTextColor(getResources().getColor(R.color.icono_add));
+        botonGaleria.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.gallery_button, 0, 0);
+        botonGaleria.setText("Importar una foto");
+        botonGaleria.setTextColor(getResources().getColor(R.color.gris));
 
         botonGaleria.setPadding(0, desiredHeight/3, 0, 0);
 
@@ -156,11 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
             Bitmap imageBitmap = BitmapFactory.decodeFile(tempFile.getAbsolutePath());
 
-            miImagen.setEstado(0); // cámara
-            miImagen.setBitmapCamara(imageBitmap);
-
-            // para cuando queramos acceder a la imagen sin editar
-            miImagen.setBitmapSinFiltro(imageBitmap);
+            miImagen.addVersion(imageBitmap);
 
             startActivity(intent);
         }
@@ -180,11 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            miImagen.setEstado(1); // galeria
-            miImagen.setBitmapGaleria(imageBitmap);
-
-            // para cuando queramos acceder a la imagen sin editar
-            miImagen.setBitmapSinFiltro(imageBitmap);
+            miImagen.addVersion(imageBitmap);
 
             startActivity(intent);
         }

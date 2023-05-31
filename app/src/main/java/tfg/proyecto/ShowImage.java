@@ -44,22 +44,8 @@ public class ShowImage extends Activity {
         botonSi = findViewById(R.id.botonSi);
         botonSi.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.check_botton, 0, 0);
 
-        // --------------- CÁMARA ---------------
 
-        if (miImagen.getEstado() == 0){
-            imgView.setImageBitmap(miImagen.getBitmapCamara());
-            int width = imgView.getWidth();
-            int height = imgView.getHeight();
-            //Bitmap scaleBitmap = Bitmap.createScaledBitmap(miImagen.getBitmapCamara(),width,height,false);
-            //imgView.setImageBitmap(scaleBitmap);
-            imgView.setImageBitmap(miImagen.getBitmapCamara());
-        }
-
-        // --------------- GALERIA ---------------
-
-        if (miImagen.getEstado() == 1){
-            imgView.setImageBitmap(miImagen.getBitmapGaleria());
-        }
+        imgView.setImageBitmap(miImagen.getBitmapActual());
 
 
         botonSi.setOnClickListener(new View.OnClickListener() {

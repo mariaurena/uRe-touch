@@ -46,6 +46,7 @@ public class DobleExposicion extends AppCompatActivity {
     GPUImageView gpuImageView;
 
     Button exportar;
+    Button atras;
 
     Bitmap imagenRecibida;
     Bitmap imagenElegidaGaleria;
@@ -78,35 +79,7 @@ public class DobleExposicion extends AppCompatActivity {
 
         miImagen = new MiImagen();
 
-        // --------------- CÁMARA ---------------
-
-        if (miImagen.getEstado() == 0){
-            imagenRecibida = miImagen.getBitmapCamara();
-        }
-
-        // --------------- GALERIA ---------------
-
-        else if (miImagen.getEstado() == 1){
-            imagenRecibida = miImagen.getBitmapGaleria();
-        }
-
-        // --------------- RECORTADA ---------------
-
-        else if (miImagen.getEstado() == 2){
-            imagenRecibida = miImagen.getBitmapRecortada();
-        }
-
-        // --------------- EDITADA ---------------
-
-        else if (miImagen.getEstado() == 3){
-            imagenRecibida = miImagen.getBitmapEditada();
-        }
-
-        // --------------- ORIGINAL ---------------
-
-        else if (miImagen.getEstado() == 4){
-            imagenRecibida = miImagen.getBitmapSinFiltro();
-        }
+        imagenRecibida = miImagen.getBitmapActual();
 
         gpuImageView.setImage(imagenRecibida);
 
@@ -145,6 +118,15 @@ public class DobleExposicion extends AppCompatActivity {
                     gpuImageView.requestRender();
                 }
 
+            }
+        });
+
+        atras = findViewById(R.id.volver);
+        atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), EditarFoto.class);
+                startActivity(intent);
             }
         });
 
@@ -203,6 +185,15 @@ public class DobleExposicion extends AppCompatActivity {
         imgView.setImageBitmap(blendedBitmap);
 
         gpuImage.setFilter(filterGroup);
+
+        /*
+
+        miImagen.setBitmapEditada(gpuImage.getBitmapWithFilterApplied());
+        miImagen.setEstado(3);
+
+         */
+
+        miImagen.addVersion(gpuImage.getBitmapWithFilterApplied());
 
     }
 

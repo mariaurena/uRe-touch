@@ -2,20 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Theme.TFG"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:exported="true">
 
-<!--
-    <jp.co.cyberagent.android.gpuimage.GPUImageView
-        android:id="@+id/gpuimageview"
-        android:layout_width="406dp"
-        android:layout_height="354dp"
-        app:gpuimage_show_loading="false"
-        app:gpuimage_surface_type="texture_view" />
-     -->
+    <Button
+        android:id="@+id/volver"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="OK" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent">
+    </View>
 
     <ImageView
         android:id="@+id/muestraImagen"
@@ -25,11 +29,23 @@
         android:scaleType="centerInside"
         android:layout_gravity="center"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent">
+    </View>
+
     <Button
         android:id="@+id/exportar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="EXPORTAR IMAGEN DESDE GALERIA" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent">
+    </View>
 
     <SeekBar
         android:id="@+id/seekbarBlend"
@@ -37,6 +53,7 @@
         android:layout_height="wrap_content"
         android:max="60"
         android:progress="30" />
+
 
 
 </LinearLayout>

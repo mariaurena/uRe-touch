@@ -5,79 +5,68 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class MiImagen {
 
-    public static Bitmap bitmapCamara;
-    public static Bitmap bitmapGaleria;
-    public static Bitmap bitmapRecortada;
-    public static Bitmap bitmapEditada;
-    public static Bitmap bitmapEditadaAv;
-    public static Bitmap bitmapSinFiltro;
-
-    // Estado de la imagen
-    // -1 : no válida
-    //  0 : imagen cámara
-    //  1 : imagen galeria
-    //  2 : imagen recortada
-    //  3 : imagen editada
-    //  4 : imagen sin editar
-
-    public static int estado = -1;
+    // guardamos el historial de versiones de la edición
+    private static ArrayList<Bitmap> historial = new ArrayList<>();
+    static private int nVersion = -1;
 
     public static Boolean bajaEficiencia = false;
 
-    // ------------------------ SET ------------------------
 
-    public void setBitmapCamara(Bitmap bit){ this.bitmapCamara = bit;}
-
-    public void setBitmapGaleria(Bitmap bit){
-        this.bitmapGaleria = bit;
+    public void addVersion(Bitmap bit){
+        historial.add(bit);
+        nVersion++;
+        listarBitmaps("addVersion");
     }
 
-    public void setBitmapRecortada(Bitmap bit){
-        this.bitmapRecortada = bit;
+    private void listarBitmaps( String message )
+    {
+        Log.e("listando Bitmaps",message);
+        Log.e("     nVersion= ",String.valueOf(nVersion));
+        Log.e("     tamArray= ",String.valueOf(historial.size()));
+        for (int i = 0 ; i<=nVersion ; i++){
+            Log.e("       Bitmap: ",String.valueOf(historial.get(i)));
+        }
     }
 
-    public void setBitmapEditada(Bitmap bit){
-        this.bitmapEditada = bit;
-    }
+    public Bitmap getBitmapActual(){
+        if (nVersion < 0){
+            Log.e("error","nVersion es -1");
+        }
 
-    public void setBitmapSinFiltro(Bitmap bit){ this.bitmapSinFiltro = bit;}
-
-    public void setEstado(int estado){
-        this.estado = estado;
-    }
-
-
-    // ------------------------ GET ------------------------
-
-    public Bitmap getBitmapCamara(){
-        return this.bitmapCamara;
-    }
-
-    public Bitmap getBitmapGaleria(){
-        return this.bitmapGaleria;
-    }
-
-    public Bitmap getBitmapRecortada(){
-        return this.bitmapRecortada;
-    }
-
-    public Bitmap getBitmapEditada(){
-        return this.bitmapEditada;
-    }
-
-    public Bitmap getBitmapSinFiltro(){
-        return this.bitmapSinFiltro;
-    }
-
-    public int getEstado(){
-        return this.estado;
+        Bitmap a_devolver = historial.get(nVersion);
+        listarBitmaps("getBitmapActual");
+        return a_devolver;
+        //return historial.get(nVersion);
     }
 
     public Boolean getBajaEficiencia(){
         return this.bajaEficiencia;
+    }
+
+    public Bitmap getBitmap_VersionAnterior(){
+        Bitmap a_devolver = null;
+
+        if (nVersion == 0){
+            Log.e("la version anterior es ",String.valueOf(0));
+            a_devolver = historial.get(0);
+            Log.e("hay estas versiones",String.valueOf(historial.size()));
+        }
+        else{
+            Log.e("la version anterior es ",String.valueOf(nVersion-1));
+            a_devolver = historial.get(nVersion-1);
+            historial.remove(nVersion);
+            nVersion --;
+            Log.e("version actual:",String.valueOf(nVersion));
+            Log.e("hay estas versiones",String.valueOf(historial.size()));
+        }
+
+        listarBitmaps("getBitmap_VersionAnterior");
+
+        return a_devolver;
     }
 
 

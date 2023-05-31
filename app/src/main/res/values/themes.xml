@@ -8,7 +8,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.TFG.NoActionBar">
+    <style name="Theme.TFG.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

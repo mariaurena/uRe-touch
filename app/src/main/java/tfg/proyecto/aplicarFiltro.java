@@ -50,51 +50,28 @@ public class aplicarFiltro extends AppCompatActivity {
     GPUImageSphereRefractionFilter filtroEsfera;
     GPUImageGrayscaleFilter filtroByN;
 
-    Button restablecerExpo;
-    Button restablecerContraste;
-    Button restablecerSombras;
-    Button restablecerLuces;
-    Button restablecerBrillo;
-    Button restablecerSaturacion;
-    Button restablecerNitidez;
-
     GPUImage gpuImage;
     GPUImageView gpuImageView;
     ImageView imgView;
 
-    SeekBar exposicionSeekBar,contrasteSeekBar,sombrasSeekBar,lucesSeekBar,brilloSeekBar,satSeekBar,nitSeekBar;
     SeekBar seekBar;
 
-    TextView textView,textViewCon,textViewSom,textViewLuc,textViewBr,textViewSat,textViewNit;
+    TextView textView;
 
     Boolean editada = false;
 
     Button restablecer;
 
     Boolean byn    = false;
+    Boolean esfera = false;
+
+    static int contadorVersiones = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aplicar_filtro);
-
-        /*
-        recibiremos un int de 'editarFoto' que representa:
-
-        0  : exposición
-        1  : contraste
-        2  : sombras
-        3  : luces
-        4  : brillo
-        5  : saturación
-        6  : nitidez
-        7  : gaussiano
-        8  : vivacidad
-        9  : gamma
-        10 : esfera
-        11 : blanco y negro
-
-         */
 
         tipoFiltro = getIntent().getIntExtra("tipoFiltro",-1);
 
@@ -102,35 +79,7 @@ public class aplicarFiltro extends AppCompatActivity {
         gpuImageView = new GPUImageView(this);
         gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
-        // --------------- CÁMARA ---------------
-
-        if (miImagen.getEstado() == 0){
-            imageBitMap = miImagen.getBitmapCamara();
-        }
-
-        // --------------- GALERIA ---------------
-
-        else if (miImagen.getEstado() == 1){
-            imageBitMap = miImagen.getBitmapGaleria();
-        }
-
-        // --------------- RECORTADA ---------------
-
-        else if (miImagen.getEstado() == 2){
-            imageBitMap = miImagen.getBitmapRecortada();
-        }
-
-        // --------------- EDITADA ---------------
-
-        else if (miImagen.getEstado() == 3){
-            imageBitMap = miImagen.getBitmapEditada();
-        }
-
-        // --------------- ORIGINAL ---------------
-
-        else if (miImagen.getEstado() == 4){
-            imageBitMap = miImagen.getBitmapSinFiltro();
-        }
+        imageBitMap = miImagen.getBitmapActual();
 
         imgView = findViewById(R.id.muestraImagen);
         imgView.setImageBitmap(imageBitMap);
@@ -159,7 +108,6 @@ public class aplicarFiltro extends AppCompatActivity {
         filtroNit = new GPUImageSharpenFilter();
         filtroNit.setSharpness(0.0f);
 
-
         filtroGausiano    = new GPUImageGaussianBlurFilter();
         filtroVivacidad   = new GPUImageVibranceFilter();
         filtroGamma       = new GPUImageGammaFilter();
@@ -170,6 +118,9 @@ public class aplicarFiltro extends AppCompatActivity {
         botonAtras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // aquí aplicamos el filtro dándole a 'OK' por tanto aqui llevaremos
+                // el control de las versiones que vamos añadiendo
+                miImagen.addVersion(gpuImage.getBitmapWithFilterApplied());
                 Intent intent = new Intent(getBaseContext(),EditarFoto.class);
                 startActivity(intent);
             }
@@ -220,7 +171,7 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.e("d","PULSADO");
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("30");
                         filtroExposición.setExposure(0.0f);
                         seekBar.setProgress(30);
@@ -270,6 +221,7 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("30");
                         filtroContraste.setContrast(1.0f);
                         seekBar.setProgress(30);
@@ -319,6 +271,7 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("0");
                         filtroSombras.setShadows(0.0f);
                         seekBar.setProgress(0);
@@ -368,6 +321,7 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("0");
                         filtroLuces.setHighlights(1.0f);
                         seekBar.setProgress(0);
@@ -417,6 +371,7 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("30");
                         filtroBrillo.setBrightness(0.0f);
                         seekBar.setProgress(30);
@@ -466,6 +421,7 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("30");
                         filtroSat.setSaturation(1.0f);
                         seekBar.setProgress(30);
@@ -500,6 +456,7 @@ public class aplicarFiltro extends AppCompatActivity {
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         if (miImagen.getBajaEficiencia() == true){
+                            contadorVersiones = contadorVersiones - 1;
                             int i = seekBar.getProgress();
                             textView.setText("" + i);
                             filtroNit.setSharpness(range(i,-4.0f,4.0f));
@@ -534,7 +491,7 @@ public class aplicarFiltro extends AppCompatActivity {
                         if (miImagen.getBajaEficiencia() == false){
                             textView.setText("" + i);
                             filtroGausiano.setBlurSize(range(i,0.0f,8.0f));
-                            aplicarFiltroSinEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -553,7 +510,7 @@ public class aplicarFiltro extends AppCompatActivity {
                             int i = seekBar.getProgress();
                             textView.setText("" + i);
                             filtroGausiano.setBlurSize(range(i,0.0f,8.0f));
-                            aplicarFiltroSinEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -565,10 +522,11 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("0");
                         filtroGausiano.setBlurSize(0.0f);
                         seekBar.setProgress(0);
-                        aplicarFiltroSinEsfera();
+                        aplicarFiltros();
                         gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                         gpuImageView.requestRender();
                     }
@@ -583,7 +541,7 @@ public class aplicarFiltro extends AppCompatActivity {
                         if (miImagen.getBajaEficiencia() == false){
                             textView.setText("" + i);
                             filtroVivacidad.setVibrance(range(i,-1.2f,1.2f));
-                            aplicarFiltroSinEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -602,7 +560,7 @@ public class aplicarFiltro extends AppCompatActivity {
                             int i = seekBar.getProgress();
                             textView.setText("" + i);
                             filtroVivacidad.setVibrance(range(i,-1.2f,1.2f));
-                            aplicarFiltroSinEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -614,10 +572,11 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("30");
                         filtroVivacidad.setVibrance(0.0f);
                         seekBar.setProgress(30);
-                        aplicarFiltroSinEsfera();
+                        aplicarFiltros();
                         gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                         gpuImageView.requestRender();
                     }
@@ -632,7 +591,7 @@ public class aplicarFiltro extends AppCompatActivity {
                         if (miImagen.getBajaEficiencia() == false){
                             textView.setText("" + i);
                             filtroGamma.setGamma(range(i,0.0f,3.0f));
-                            aplicarFiltroSinEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -651,7 +610,7 @@ public class aplicarFiltro extends AppCompatActivity {
                             int i = seekBar.getProgress();
                             textView.setText("" + i);
                             filtroGamma.setGamma(range(i,0.0f,3.0f));
-                            aplicarFiltroSinEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -663,10 +622,11 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("30");
                         filtroGamma.setGamma(0.0f);
                         seekBar.setProgress(30);
-                        aplicarFiltroSinEsfera();
+                        aplicarFiltros();
                         gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                         gpuImageView.requestRender();
                     }
@@ -674,6 +634,8 @@ public class aplicarFiltro extends AppCompatActivity {
                 break;
 
             case 10:
+                seekBar.setProgress(0);
+                esfera = true;
                 // -- esfera --
                 ((SeekBar) findViewById(R.id.seekbar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -682,7 +644,7 @@ public class aplicarFiltro extends AppCompatActivity {
                             textView.setText("" + i);
                             filtroEsfera.setRadius(0.5f);
                             filtroEsfera.setRefractiveIndex(range(i,0.0f,1.0f));
-                            aplicarFiltroEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -702,7 +664,7 @@ public class aplicarFiltro extends AppCompatActivity {
                             textView.setText("" + i);
                             filtroEsfera.setRadius(0.5f);
                             filtroEsfera.setRefractiveIndex(range(i,0.0f,1.0f));
-                            aplicarFiltroEsfera();
+                            aplicarFiltros();
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -714,9 +676,11 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        esfera = false;
+                        contadorVersiones = contadorVersiones - 1;
                         textView.setText("0");
                         seekBar.setProgress(0);
-                        aplicarFiltroSinEsfera();
+                        aplicarFiltros();
                         gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                         gpuImageView.requestRender();
                     }
@@ -725,7 +689,7 @@ public class aplicarFiltro extends AppCompatActivity {
 
             case 11:
                 byn = true;
-                aplicarFiltroConByn();
+                aplicarFiltros();
                 seekBar.setVisibility(View.INVISIBLE);
                 gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                 gpuImageView.requestRender();
@@ -734,8 +698,9 @@ public class aplicarFiltro extends AppCompatActivity {
                 restablecer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        contadorVersiones = contadorVersiones - 1;
                         byn = false;
-                        aplicarFiltroSinEsfera();
+                        aplicarFiltros();
                         gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                         gpuImageView.requestRender();
                     }
@@ -757,23 +722,13 @@ public class aplicarFiltro extends AppCompatActivity {
         filterGroup.addFilter(filtroNit);
         filterGroup.addFilter(filtroSat);
 
-        editada = true;
-
-        gpuImage.setFilter(filterGroup);
-
-        miImagen.setBitmapEditada(gpuImage.getBitmapWithFilterApplied());
-        miImagen.setEstado(3);
-
-        imgView.setImageBitmap(gpuImage.getBitmapWithFilterApplied());
-
-    }
-
-    public void aplicarFiltroSinEsfera(){
-        GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
-
         filterGroup.addFilter(filtroGausiano);
         filterGroup.addFilter(filtroVivacidad);
         filterGroup.addFilter(filtroGamma);
+
+        if (esfera == true){
+            filterGroup.addFilter(filtroEsfera);
+        }
 
         if (byn == true){
             filterGroup.addFilter(filtroByN);
@@ -783,44 +738,8 @@ public class aplicarFiltro extends AppCompatActivity {
 
         gpuImage.setFilter(filterGroup);
 
-        miImagen.setBitmapEditada(gpuImage.getBitmapWithFilterApplied());
-        miImagen.setEstado(3);
-
-        imgView.setImageBitmap(gpuImage.getBitmapWithFilterApplied());
-    }
-
-    public void aplicarFiltroEsfera(){
-        GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
-
-        filterGroup.addFilter(filtroEsfera);
-
-        editada = true;
-
-        gpuImage.setFilter(filterGroup);
-
-        miImagen.setBitmapEditada(gpuImage.getBitmapWithFilterApplied());
-        miImagen.setEstado(3);
-
         imgView.setImageBitmap(gpuImage.getBitmapWithFilterApplied());
 
-    }
-
-    public void aplicarFiltroConByn(){
-        GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
-
-        filterGroup.addFilter(filtroGausiano);
-        filterGroup.addFilter(filtroVivacidad);
-        filterGroup.addFilter(filtroGamma);
-        filterGroup.addFilter(filtroByN);
-
-        editada = true;
-
-        gpuImage.setFilter(filterGroup);
-
-        miImagen.setEstado(3);
-        miImagen.setBitmapEditada(gpuImage.getBitmapWithFilterApplied());
-
-        imgView.setImageBitmap(gpuImage.getBitmapWithFilterApplied());
     }
 
     protected float range(final float percentage, final float start, final float end) {
