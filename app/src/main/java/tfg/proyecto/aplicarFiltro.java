@@ -114,12 +114,17 @@ public class aplicarFiltro extends AppCompatActivity {
         filtroEsfera      = new GPUImageSphereRefractionFilter();
         filtroByN         = new GPUImageGrayscaleFilter();
 
+        // boton de OK
         botonAtras = findViewById(R.id.botonAtras);
         botonAtras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // aquí aplicamos el filtro dándole a 'OK' por tanto aqui llevaremos
                 // el control de las versiones que vamos añadiendo
+                Log.e("boton ok añade v","");
+                // permitimos que pueda rehacerse y deshacerse el efecto
+                //miImagen.setBloqueoRehacer(true);
+                miImagen.setBloqueoDeshacer(true);
                 miImagen.addVersion(gpuImage.getBitmapWithFilterApplied());
                 Intent intent = new Intent(getBaseContext(),EditarFoto.class);
                 startActivity(intent);

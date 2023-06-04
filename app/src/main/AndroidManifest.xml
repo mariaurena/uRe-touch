@@ -36,12 +36,17 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
+            android:name=".VerVersiones"
+            android:exported="false"
+            android:theme="@style/Theme.TFG"/>
+        <activity
             android:name=".aplicarFiltro"
             android:exported="false"
             android:theme="@style/Theme.TFG" />
         <activity
             android:name=".DobleExposicion"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.TFG"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
@@ -49,7 +54,7 @@
         <activity
             android:name=".RecortarImagen"
             android:exported="true"
-            android:theme="@style/Theme.TFG"/>
+            android:theme="@style/Theme.TFG" />
         <activity
             android:name=".EditarFoto"
             android:exported="true"

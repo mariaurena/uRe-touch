@@ -12,14 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:scaleType="centerInside" />
+        android:layout_marginTop="20dp"
+        android:scaleType="centerInside"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/muestraImagen"
         android:layout_gravity="center"
         android:layout_marginBottom="16dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 

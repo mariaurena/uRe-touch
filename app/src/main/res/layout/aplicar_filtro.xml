@@ -28,11 +28,14 @@
             android:layout_weight="1"
             android:layout_centerInParent="true"
             android:scaleType="centerInside"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:paddingLeft="30dp">
 
@@ -54,8 +57,9 @@
             android:layout_width="60dp"
             android:layout_height="53dp"
             android:drawableTop="@drawable/restablecer_botton"
-            android:background="@android:color/transparent">
+            android:background="@android:color/transparent"
             android:paddingBottom="30dp"
+            android:paddingTop="10dp">
         </Button>
 
     </LinearLayout>

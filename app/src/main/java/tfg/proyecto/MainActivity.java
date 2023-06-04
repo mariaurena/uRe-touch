@@ -4,15 +4,18 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
 import android.net.Uri;
@@ -67,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
         miImagen = new MiImagen();
 
+        // al principio, no podrá deshacerse ni rehacerse nada
+        miImagen.setBloqueoDeshacer(false);
+        //miImagen.setBloqueoRehacer(false);
+
         // vamos a hacer que haya un botón que ocupe la primera mitad de la pantalla
         // para elegir la imagen de la cámara
 
@@ -117,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void abrirCamara(){
+        Uri imageUri = null;
         Intent camara = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         // pedir permisos en tiempo de ejecución
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -129,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Uri imageUri = FileProvider.getUriForFile(this, "tfg.proyecto.fileprovider", tempFile);
+            imageUri = FileProvider.getUriForFile(this, "tfg.proyecto.fileprovider", tempFile);
             camara.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(camara, 1);
         }
@@ -188,5 +196,24 @@ public class MainActivity extends AppCompatActivity {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
         return imageFile;
+    }
+
+    // Función para rotar el bitmap según la orientación
+    private Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(270);
+                break;
+            default:
+                return bitmap;
+        }
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 }

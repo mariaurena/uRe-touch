@@ -85,6 +85,7 @@ public class RecortarImagen extends AppCompatActivity {
         miImagen = new MiImagen();
 
         imageBitMap = miImagen.getBitmapActual();
+        //imageBitMap = miImagen.getVersion(miImagen.getVersionActual());
 
         uriARecortar = getImageUri(getBaseContext(),imageBitMap);
 

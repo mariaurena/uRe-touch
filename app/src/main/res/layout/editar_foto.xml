@@ -20,21 +20,22 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="20dp">
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/muestraImagen"
-                android:layout_width="432dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginBottom="70dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:scaleType="centerInside" />
+                android:scaleType="centerInside"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="100dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"/>
@@ -42,7 +43,7 @@
             <com.github.clans.fab.FloatingActionMenu
                 android:id="@+id/menu"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -84,33 +85,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/versiones_button"
-                    fab:fab_label="Ver ediciones"
-                    fab:fab_size="mini"
                     fab:fab_colorNormal="@color/gris"
-                    fab:fab_colorPressed="@color/black"/>
+                    fab:fab_colorPressed="@color/black"
+                    fab:fab_label="Ver ediciones"
+                    fab:fab_size="mini" />
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/rehacer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/rehacer_button"
-                    fab:fab_size="mini"
                     fab:fab_colorNormal="@color/gris"
-                    fab:fab_colorPressed="@color/black"/>
+                    fab:fab_colorPressed="@color/black"
+                    fab:fab_size="mini" />
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/deshacer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/restablecer2_button"
-                    fab:fab_size="mini"
                     fab:fab_colorNormal="@color/gris"
-                    fab:fab_colorPressed="@color/black"/>
+                    fab:fab_colorPressed="@color/black"
+                    fab:fab_size="mini" />
 
             </com.github.clans.fab.FloatingActionMenu>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="bottom"

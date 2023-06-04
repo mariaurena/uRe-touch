@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -98,18 +101,7 @@ public class EditarFoto extends AppCompatActivity {
 
     FloatingActionButton botonRehacer;
     FloatingActionButton botonDeshacer;
-
-    GPUImage gpuImage;
-
-    Boolean editada        = false;
-
-    GPUImageExposureFilter        filtroExposición;
-    GPUImageContrastFilter        filtroContraste;
-    GPUImageHighlightShadowFilter filtroSombras;
-    GPUImageHighlightShadowFilter filtroLuces;
-    GPUImageBrightnessFilter      filtroBrillo;
-    GPUImageSaturationFilter      filtroSat;
-    GPUImageSharpenFilter         filtroNit;
+    FloatingActionButton botonVerEdiciones;
 
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
@@ -126,6 +118,7 @@ public class EditarFoto extends AppCompatActivity {
         imgView = findViewById(R.id.muestraImagen);
 
         imageBitMap = miImagen.getBitmapActual();
+        //imageBitMap = miImagen.getVersion(miImagen.getVersionActual());
 
         imgView.setImageBitmap(imageBitMap);
 
@@ -143,14 +136,12 @@ public class EditarFoto extends AppCompatActivity {
                     case R.id.exposicion:
                         Intent intent = new Intent(getBaseContext(), aplicarFiltro.class);
                         intent.putExtra("tipoFiltro",0);
-                        Log.e("d","mando 0");
                         startActivity(intent);
                         item.setChecked(false);
                         return true;
                     case R.id.contraste:
                         Intent intent1 = new Intent(getBaseContext(), aplicarFiltro.class);
                         intent1.putExtra("tipoFiltro",1);
-                        Log.e("d","mando 1");
                         startActivity(intent1);
                         item.setChecked(false);
                         return true;
@@ -261,14 +252,79 @@ public class EditarFoto extends AppCompatActivity {
             }
         });
 
+        botonRehacer = findViewById(R.id.rehacer);
         botonDeshacer = findViewById(R.id.deshacer);
+
+        botonDeshacer.setEnabled(miImagen.getBloquearDeshacer());
+        if (miImagen.getBloquearDeshacer() == false){
+            Log.e("boton deshacer a false","");
+            botonDeshacer.setAlpha(0.5f);
+        }
+        else{
+            Log.e("boton deshacer a true","");
+            botonDeshacer.setAlpha(1.0f);
+        }
+
+        // al principio, no puede deshacerse nada (controlar mediante miImagen con un bool!!)
         botonDeshacer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("hola","click en boton deshacer");
+                miImagen.setBloqueoRehacer(true);
+                botonRehacer.setEnabled(true);
+                botonRehacer.setAlpha(1.0f);
+                Log.e("boton rehacer a true","h");
                 Bitmap bitmapVersionAnterior = miImagen.getBitmap_VersionAnterior();
                 imgView.setImageBitmap(bitmapVersionAnterior);
                 //miImagen.addVersion(bitmapVersionAnterior);
+            }
+        });
+
+        botonVerEdiciones = findViewById(R.id.verEdiciones);
+        botonVerEdiciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), VerVersiones.class);
+                startActivity(intent);
+            }
+        });
+
+        botonRehacer.setEnabled(miImagen.getBloquearRehacer());
+        if (miImagen.getBloquearRehacer() == false){
+            Log.e("esta a false","");
+            botonRehacer.setAlpha(0.5f);
+        }
+        else{
+            Log.e("esta a true","");
+            botonRehacer.setAlpha(1.0f);
+        }
+
+        botonRehacer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bitmap bitmapVersionSiguiente = miImagen.getBitmap_VersionSiguiente();
+                Log.e("versio siguiente editar",String.valueOf(bitmapVersionSiguiente));
+                imgView.setImageBitmap(bitmapVersionSiguiente);
+                miImagen.addVersion(bitmapVersionSiguiente);
+                // al pulsar una vez en rehacer, se bloquea el boton
+                miImagen.setBloqueoRehacer(false);
+                botonRehacer.setEnabled(miImagen.getBloquearRehacer());
+                botonRehacer.setAlpha(0.5f);
+            }
+        });
+
+        imgView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: // Se ha presionado la imagen
+                        imgView.setImageBitmap(miImagen.getVersion(0)); // Mostrar la imagen presionada
+                        break;
+                    case MotionEvent.ACTION_UP: // Se ha soltado la imagen
+                    case MotionEvent.ACTION_CANCEL: // Se ha cancelado el evento táctil
+                        imgView.setImageBitmap(miImagen.getBitmapActual()); // Mostrar la imagen original
+                        break;
+                }
+                return true; // Indicar que se ha procesado el evento táctil
             }
         });
     }
@@ -353,11 +409,6 @@ public class EditarFoto extends AppCompatActivity {
         switch(item.getItemId()){
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.exposicion:
-                Log.e("d","holaa");
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
                 return true;
         }
 

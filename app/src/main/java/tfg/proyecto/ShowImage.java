@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import android.media.ExifInterface;
+
 import java.io.FileInputStream;
 
 
@@ -44,9 +46,7 @@ public class ShowImage extends Activity {
         botonSi = findViewById(R.id.botonSi);
         botonSi.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.check_botton, 0, 0);
 
-
         imgView.setImageBitmap(miImagen.getBitmapActual());
-
 
         botonSi.setOnClickListener(new View.OnClickListener() {
             @Override
