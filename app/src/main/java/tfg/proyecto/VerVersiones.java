@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 public class VerVersiones extends AppCompatActivity {
 
     private ImageView imgView;
+
     private MiImagen miImagen;
 
     private int numero_versiones;
@@ -31,7 +33,7 @@ public class VerVersiones extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    Menu menu;
+    public Menu menu;
 
     private Button botonOK;
 
@@ -70,22 +72,20 @@ public class VerVersiones extends AppCompatActivity {
         numero_versiones = miImagen.getNumeroVersiones();
         menu = navigationView.getMenu();
 
-
         for ( int i = 0 ; i < numero_versiones ; i++ ){
-            MenuItem menuItem = menu.add(Menu.NONE,R.id.filtro,Menu.NONE,"Versión "+i);
-            final int version_actual = i;
-            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    Log.e("hola version numero",String.valueOf(version_actual));
-                    vActual = version_actual;
-                    imgView.setImageBitmap(miImagen.getVersion(version_actual));
-                    drawerLayout.closeDrawers();
-                    return true;
-                }
-            });
+                MenuItem menuItem = menu.add(Menu.NONE,R.id.filtro,Menu.NONE,"Versión "+i);
+                final int version_actual = i;
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        Log.e("hola version numero",String.valueOf(version_actual));
+                        vActual = version_actual;
+                        imgView.setImageBitmap(miImagen.getVersion(version_actual));
+                        drawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
         }
-
         // para reflejar los cambios en la vista del menú
         navigationView.invalidate();
 
@@ -93,8 +93,6 @@ public class VerVersiones extends AppCompatActivity {
         botonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Drawable drawable = imgView.getDrawable();
-                //miImagen.addVersion(((BitmapDrawable)drawable).getBitmap());
                 miImagen.setVersionActual(vActual);
                 miImagen.eliminarVersionesSiguientesA(vActual);
                 Log.e("elimindo v siguientes a",String.valueOf(vActual));
@@ -111,7 +109,7 @@ public class VerVersiones extends AppCompatActivity {
     private void setToolBar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu_botton);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.versiones2_botton);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }

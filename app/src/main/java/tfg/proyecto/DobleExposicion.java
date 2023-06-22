@@ -38,23 +38,23 @@ import java.io.OutputStream;
 
 public class DobleExposicion extends AppCompatActivity {
 
-    MiImagen miImagen;
+    public MiImagen miImagen;
 
-    ImageView imgView;
+    public ImageView imgView;
 
-    GPUImage     gpuImage;
-    GPUImageView gpuImageView;
+    public GPUImage     gpuImage;
+    public GPUImageView gpuImageView;
 
-    Button exportar;
-    Button atras;
+    public Button exportar;
+    public Button atras;
 
-    Bitmap imagenRecibida;
-    Bitmap imagenElegidaGaleria;
-    Bitmap imagenElegidaResize;
+    public Bitmap imagenRecibida;
+    public Bitmap imagenElegidaGaleria;
+    public Bitmap imagenElegidaResize;
 
-    GPUImageDissolveBlendFilter filtroMezcla;
+    public GPUImageDissolveBlendFilter filtroMezcla;
 
-    SeekBar seekbarBlend;
+    public SeekBar seekbarBlend;
 
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
@@ -199,26 +199,6 @@ public class DobleExposicion extends AppCompatActivity {
 
     protected float range(final float percentage, final float start, final float end) {
         return (end - start) * percentage / 100.0f + start;
-    }
-
-    // pedimos permisos de escritura en tiempo de ejecución (necesario a partir de Android 11 API 30)
-    public boolean permisos_escritura(){
-        // Verificar si se tienen permisos de escritura en el almacenamiento externo
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // Si no hay permisos, solicitarlos
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
-        }
-        return true;
-    }
-
-    // pedimos permisos de lectura en tiempo de ejecución (necesario a partir de Android 11 API 30)
-    public boolean permisos_lectura(){
-        // Verificar si se tienen permisos de lectura en el almacenamiento externo
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // Si no hay permisos, solicitarlos
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_STORAGE);
-        }
-        return true;
     }
 
     // manejamos la petición de dichos permisos

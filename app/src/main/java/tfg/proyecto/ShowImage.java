@@ -16,10 +16,10 @@ import java.io.FileInputStream;
 
 
 public class ShowImage extends Activity {
-    ImageView imgView;
-    String imagenCamara;
-    Button botonNo,botonSi;
-    String imagenGaleria;
+    public ImageView imgView;
+    public String imagenCamara;
+    public Button botonNo,botonSi;
+    public String imagenGaleria;
 
     MiImagen miImagen;
 

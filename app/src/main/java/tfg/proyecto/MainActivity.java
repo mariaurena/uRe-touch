@@ -3,6 +3,7 @@ package tfg.proyecto;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -97,7 +99,11 @@ public class MainActivity extends AppCompatActivity {
         botonCamara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abrirCamara();
+                try {
+                    abrirCamara();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -123,13 +129,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void abrirCamara(){
+    private void abrirCamara() throws IOException {
         Uri imageUri = null;
         Intent camara = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         // pedir permisos en tiempo de ejecución
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 123);
-
         } else {
             // creamos archivo temporal
             try {
@@ -149,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(galeria,2);
     }
 
+
+
     // para el resultado de la actividad
     protected void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -159,8 +166,47 @@ public class MainActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this,ShowImage.class);
 
+            // Obtener la ruta de la imagen capturada
+            String imagePath = tempFile.getAbsolutePath();
+
+            // En algunos dispositivos, la imagen se rota automáticamente, corregimos eso:
+            // Obtenemos la orientación de la imagen
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(imagePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+
             Bitmap imageBitmap = BitmapFactory.decodeFile(tempFile.getAbsolutePath());
 
+            // Rotar la imagen según la orientación
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.setRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.setRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.setRotate(270);
+                    break;
+                default:
+                    // No es necesario realizar rotación
+            }
+
+            // Aplicar la rotación si es necesario
+            if (matrix.isIdentity()) {
+                // No se requiere rotación
+            } else {
+                Bitmap rotatedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+                imageBitmap.recycle();
+                imageBitmap = rotatedBitmap;
+            }
+
+            miImagen.resetearVersiones();
             miImagen.addVersion(imageBitmap);
 
             startActivity(intent);
@@ -181,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            miImagen.resetearVersiones();
             miImagen.addVersion(imageBitmap);
 
             startActivity(intent);
@@ -198,22 +245,4 @@ public class MainActivity extends AppCompatActivity {
         return imageFile;
     }
 
-    // Función para rotar el bitmap según la orientación
-    private Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
-        Matrix matrix = new Matrix();
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                matrix.setRotate(90);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                matrix.setRotate(180);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                matrix.setRotate(270);
-                break;
-            default:
-                return bitmap;
-        }
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
 }

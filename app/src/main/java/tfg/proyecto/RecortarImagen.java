@@ -56,23 +56,20 @@ import java.util.Date;
 
 public class RecortarImagen extends AppCompatActivity {
 
-    Bitmap imageBitMap;
-    CropImageView mCropView;
-    ImageView cropImage;
+    public Bitmap imageBitMap;
+    public CropImageView mCropView;
 
     MiImagen miImagen;
 
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.jpg";
 
-    private Bitmap.CompressFormat mCompressFormat = Bitmap.CompressFormat.PNG;
-
     public static final int REQUEST_WRITE_STORAGE = 111;
     public static final int REQUEST_READ_STORAGE = 222;
 
-    String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME;
+    public String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME;
 
-    Uri uriARecortar;
-    Uri uriRecortada;
+    public Uri uriARecortar;
+    public Uri uriRecortada;
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override

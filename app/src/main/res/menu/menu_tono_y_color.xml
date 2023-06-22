@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/exposicion"
+        android:title="EXPOSICIÓN" />
+
+    <item
+        android:id="@+id/contraste"
+        android:title="CONTRASTE" />
+
+    <item
+        android:id="@+id/sombras"
+        android:title="SOMBRAS" />
+</menu>

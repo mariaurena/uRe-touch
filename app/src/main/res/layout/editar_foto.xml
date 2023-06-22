@@ -4,7 +4,7 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/Theme.TFG"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -25,26 +25,28 @@
             <ImageView
                 android:id="@+id/muestraImagen"
                 android:layout_marginTop="100dp"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"/>
 
-            <androidx.appcompat.widget.Toolbar
+
+            <!--<androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="100dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"/>
+                -->
 
             <com.github.clans.fab.FloatingActionMenu
-                android:id="@+id/menu"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
+                android:id="@+id/menuAjustes"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 fab:menu_animationDelayPerItem="50"
@@ -53,13 +55,12 @@
                 fab:menu_colorNormal="@color/gris"
                 fab:menu_colorPressed="@color/black"
                 fab:menu_fab_size="normal"
-                fab:menu_icon="@drawable/fab_add"
+                fab:menu_icon="@drawable/menu2_botton"
                 fab:menu_labels_colorNormal="#333333"
                 fab:menu_labels_colorPressed="#444444"
                 fab:menu_labels_colorRipple="@color/gris"
                 fab:menu_labels_cornerRadius="3dp"
                 fab:menu_labels_ellipsize="none"
-                fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
                 fab:menu_labels_margin="0dp"
                 fab:menu_labels_maxLines="-1"
                 fab:menu_labels_padding="8dp"
@@ -68,7 +69,72 @@
                 fab:menu_labels_paddingRight="8dp"
                 fab:menu_labels_paddingTop="4dp"
                 fab:menu_labels_position="left"
-                fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+                fab:menu_labels_showShadow="true"
+                fab:menu_labels_singleLine="false"
+                fab:menu_labels_textColor="#FFFFFF"
+                fab:menu_labels_textSize="14sp"
+                fab:menu_openDirection="down"
+                fab:menu_shadowColor="@color/gris"
+                fab:menu_shadowRadius="4dp"
+                fab:menu_shadowXOffset="1dp"
+                fab:menu_shadowYOffset="3dp"
+                fab:menu_showShadow="true">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/botonImportar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/home_button"
+                    fab:fab_colorNormal="@color/gris"
+                    fab:fab_colorPressed="@color/black"
+                    fab:fab_size="mini" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/botonGuardar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/save_botton"
+                    fab:fab_colorNormal="@color/gris"
+                    fab:fab_colorPressed="@color/black"
+                    fab:fab_size="mini" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/botonRecortar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/crop_button"
+                    fab:fab_colorNormal="@color/gris"
+                    fab:fab_colorPressed="@color/black"
+                    fab:fab_size="mini" />
+            </com.github.clans.fab.FloatingActionMenu>
+
+
+            <com.github.clans.fab.FloatingActionMenu
+                android:id="@+id/menuVersiones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                fab:menu_animationDelayPerItem="50"
+                fab:menu_backgroundColor="@android:color/transparent"
+                fab:menu_buttonSpacing="0dp"
+                fab:menu_colorNormal="@color/gris"
+                fab:menu_colorPressed="@color/black"
+                fab:menu_fab_size="normal"
+                fab:menu_icon="@drawable/versiones_botton"
+                fab:menu_labels_colorNormal="#333333"
+                fab:menu_labels_colorPressed="#444444"
+                fab:menu_labels_colorRipple="@color/gris"
+                fab:menu_labels_cornerRadius="3dp"
+                fab:menu_labels_ellipsize="none"
+                fab:menu_labels_margin="0dp"
+                fab:menu_labels_maxLines="-1"
+                fab:menu_labels_padding="8dp"
+                fab:menu_labels_paddingBottom="4dp"
+                fab:menu_labels_paddingLeft="8dp"
+                fab:menu_labels_paddingRight="8dp"
+                fab:menu_labels_paddingTop="4dp"
+                fab:menu_labels_position="left"
                 fab:menu_labels_showShadow="true"
                 fab:menu_labels_singleLine="false"
                 fab:menu_labels_textColor="#FFFFFF"
@@ -84,10 +150,9 @@
                     android:id="@+id/verEdiciones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/versiones_button"
+                    android:src="@drawable/versiones_botton"
                     fab:fab_colorNormal="@color/gris"
                     fab:fab_colorPressed="@color/black"
-                    fab:fab_label="Ver ediciones"
                     fab:fab_size="mini" />
 
                 <com.github.clans.fab.FloatingActionButton
@@ -110,59 +175,56 @@
 
             </com.github.clans.fab.FloatingActionMenu>
 
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/nombre_efecto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+        <LinearLayout
+            android:id="@+id/ajustes"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
+            android:orientation="horizontal">
+
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/menuLayout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="bottom"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <Button
-                    android:id="@+id/botonImportar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent" />
-
-                <Button
-                    android:id="@+id/botonDobleExposicion"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent" />
-
-                <Button
-                    android:id="@+id/botonRecortar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent" />
-
-                <Button
-                    android:id="@+id/botonGuardar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent" />
-
+                android:orientation="horizontal">
 
             </LinearLayout>
 
-        </FrameLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.08">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/AppTabLayout">
+
+            </com.google.android.material.tabs.TabLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navview"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:fitsSystemWindows="true"
-        app:menu="@menu/nav_options"
-        tools:openDrawer="start">
-
-    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

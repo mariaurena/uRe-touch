@@ -26,6 +26,7 @@ public class MiImagen {
 
     public void setBloqueoDeshacer(Boolean bloqueo){
         this.bloquearDeshacer = bloqueo;
+        Log.e("boton deshacer a",String.valueOf(bloquearDeshacer));
     }
 
     public void setBloqueoRehacer(Boolean bloqueo){
@@ -68,6 +69,14 @@ public class MiImagen {
 
     public int getVersionActual(){
         return this.nVersion;
+    }
+
+    public void resetearVersiones(){
+        for (int i = 0 ; i<historial.size() ; i++){
+            historial.remove(i);
+        }
+        historial = new ArrayList<>();
+        nVersion = -1;
     }
 
     private void listarBitmaps( String message )
@@ -125,32 +134,26 @@ public class MiImagen {
         return a_devolver;
     }
 
+    public int getIndiceVersionAnterior(){
+        int a_devolver;
+        if (nVersion == 0){
+            a_devolver = 0;
+        }
+        else{
+            a_devolver = nVersion-1;
+        }
+        return a_devolver;
+    }
+
     public Bitmap getBitmap_VersionSiguiente(){
         Bitmap a_devolver = null;
         Log.e("version siguiente es",String.valueOf(versionSiguiente));
         a_devolver = versionSiguiente;
         return a_devolver;
-
-        /*
-        Bitmap a_devolver = null;
-
-        if (nVersion == historial.size()-1){
-            Log.e("la version siguiente es",String.valueOf(nVersion));
-            a_devolver = historial.get(historial.size()-1);
-            Log.e("hay estas versiones",String.valueOf(historial.size()));
-        }
-        else{
-            a_devolver = versionSiguiente;
-        }
-
-        listarBitmaps("getBitmap_VersionSiguiente");
-        return a_devolver;
-
-         */
     }
 
-
-
-
+    public int getIndiceVersionSiguiente(){
+        return nVersion+1;
+    }
 
 }

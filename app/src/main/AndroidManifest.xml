@@ -40,10 +40,6 @@
             android:exported="false"
             android:theme="@style/Theme.TFG"/>
         <activity
-            android:name=".aplicarFiltro"
-            android:exported="false"
-            android:theme="@style/Theme.TFG" />
-        <activity
             android:name=".DobleExposicion"
             android:exported="false"
             android:theme="@style/Theme.TFG"/>

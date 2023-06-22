@@ -8,17 +8,27 @@
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/back_botton.xml" value="0.129" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/camera_button.xml" value="0.1555" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/check_botton.xml" value="0.1375" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/contraste_button.xml" value="0.136" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/crop2_botton.xml" value="0.136" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/crop_botton.xml" value="0.1" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/doble_exposicion_botton.xml" value="0.131" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/exposicion_button.xml" value="0.136" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/gallery_button.xml" value="0.1555" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/home_button.xml" value="0.1555" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.1075" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/ic_baseline_camera_roll_24.xml" value="0.1555" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/ic_baseline_layers_24.xml" value="0.137" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1075" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/menu2_botton.xml" value="0.136" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/menu_botton.xml" value="0.129" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/rehacer_button.xml" value="0.125" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/restablecer2_button.xml" value="0.125" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/restablecer_botton.xml" value="0.131" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/save_botton.xml" value="0.136" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/versiones2_bottom.xml" value="0.137" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/versiones2_botton.xml" value="0.137" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/versiones3_button.xml" value="0.136" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/versiones_botton.xml" value="0.136" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/drawable/versiones_button.xml" value="0.1555" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/activity_choose_image.xml" value="0.1" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/activity_main.xml" value="0.136" />
@@ -30,11 +40,13 @@
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/editar_foto_avanzado.xml" value="0.16" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/filtro_exposicion.xml" value="0.15163934426229508" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/header_navigation_drawer.xml" value="0.15163934426229508" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/menu_tono_y_color.xml" value="0.16154371584699453" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/recortar_imagen.xml" value="0.18795289855072464" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/show_image.xml" value="0.176" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/toolbar.xml" value="0.15163934426229508" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/layout/ver_versiones.xml" value="0.1" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/menu/menu_main.xml" value="0.255859375" />
+        <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/menu/menu_tono_y_color.xml" value="0.18515625" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/menu/menu_versiones.xml" value="0.21328125" />
         <entry key="..\:/Users/Maria UL/Desktop/TFG/proyecto/app/src/main/res/menu/nav_options.xml" value="0.255078125" />
       </map>
