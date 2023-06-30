@@ -16,10 +16,9 @@ import java.io.FileInputStream;
 
 
 public class ShowImage extends Activity {
+
     public ImageView imgView;
-    public String imagenCamara;
     public Button botonNo,botonSi;
-    public String imagenGaleria;
 
     MiImagen miImagen;
 
@@ -52,13 +51,6 @@ public class ShowImage extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), EditarFoto.class);
-                // necesario usar 'bundle' para que funcione
-                Bundle bundle = new Bundle();
-                // imagen cámara
-                bundle.putString("bundleRuta",imagenCamara);
-                // imagen galeria
-                bundle.putString("bundleFileName",imagenGaleria);
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

@@ -38,7 +38,8 @@
         <activity
             android:name=".VerVersiones"
             android:exported="false"
-            android:theme="@style/Theme.TFG"/>
+            android:theme="@style/Theme.TFG"
+            android:hardwareAccelerated="true"/>
         <activity
             android:name=".DobleExposicion"
             android:exported="false"
@@ -55,7 +56,8 @@
             android:name=".EditarFoto"
             android:exported="true"
             android:label="@string/title_activity_editar_foto"
-            android:theme="@style/Theme.TFG" />
+            android:theme="@style/Theme.TFG"
+            android:hardwareAccelerated="true"/>
 
         <meta-data
             android:name="com.google.android.actions"

@@ -71,6 +71,10 @@ public class MiImagen {
         return this.nVersion;
     }
 
+    public void setBitmapActual(Bitmap bit){
+        historial.set(nVersion,bit);
+    }
+
     public void resetearVersiones(){
         for (int i = 0 ; i<historial.size() ; i++){
             historial.remove(i);
@@ -134,26 +138,11 @@ public class MiImagen {
         return a_devolver;
     }
 
-    public int getIndiceVersionAnterior(){
-        int a_devolver;
-        if (nVersion == 0){
-            a_devolver = 0;
-        }
-        else{
-            a_devolver = nVersion-1;
-        }
-        return a_devolver;
-    }
-
     public Bitmap getBitmap_VersionSiguiente(){
         Bitmap a_devolver = null;
         Log.e("version siguiente es",String.valueOf(versionSiguiente));
         a_devolver = versionSiguiente;
         return a_devolver;
-    }
-
-    public int getIndiceVersionSiguiente(){
-        return nVersion+1;
     }
 
 }

@@ -25,12 +25,12 @@
             <ImageView
                 android:id="@+id/muestraImagen"
                 android:layout_marginTop="100dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"/>
 
 
             <!--<androidx.appcompat.widget.Toolbar
@@ -79,6 +79,15 @@
                 fab:menu_shadowXOffset="1dp"
                 fab:menu_shadowYOffset="3dp"
                 fab:menu_showShadow="true">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/botonInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/info_button"
+                    fab:fab_colorNormal="@color/gris"
+                    fab:fab_colorPressed="@color/black"
+                    fab:fab_size="mini" />
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/botonImportar"

@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,6 +31,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,8 +50,9 @@ public class DobleExposicion extends AppCompatActivity {
     public GPUImage     gpuImage;
     public GPUImageView gpuImageView;
 
-    public Button exportar;
-    public Button atras;
+    public FloatingActionButton importar;
+    public Button botonSi;
+    public Button botonNo;
 
     public Bitmap imagenRecibida;
     public Bitmap imagenElegidaGaleria;
@@ -67,8 +73,11 @@ public class DobleExposicion extends AppCompatActivity {
         gpuImage = new GPUImage(this); // imagen a la que vamos a aplicar los filtros
 
         gpuImageView = new GPUImageView(this);
-        exportar        = findViewById(R.id.exportar);
+        importar     = findViewById(R.id.importar);
+
         seekbarBlend    = findViewById(R.id.seekbarBlend);
+        seekbarBlend.getProgressDrawable().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        seekbarBlend.getThumb().setColorFilter(getResources().getColor(R.color.gris), PorterDuff.Mode.SRC_ATOP);
 
         imgView = findViewById(R.id.muestraImagen);
 
@@ -85,7 +94,7 @@ public class DobleExposicion extends AppCompatActivity {
 
         imgView.setImageBitmap(imagenRecibida);
 
-        exportar.setOnClickListener(new View.OnClickListener(){
+        importar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 abrirGaleria();
@@ -121,10 +130,21 @@ public class DobleExposicion extends AppCompatActivity {
             }
         });
 
-        atras = findViewById(R.id.volver);
-        atras.setOnClickListener(new View.OnClickListener() {
+        botonSi = findViewById(R.id.botonSi);
+        botonSi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                miImagen.addVersion(gpuImage.getBitmapWithFilterApplied());
+                Intent intent = new Intent(view.getContext(), EditarFoto.class);
+                startActivity(intent);
+            }
+        });
+
+        botonNo = findViewById(R.id.botonNo);
+        botonNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                miImagen.setBitmapActual(miImagen.getBitmap_VersionAnterior());
                 Intent intent = new Intent(view.getContext(), EditarFoto.class);
                 startActivity(intent);
             }
@@ -192,8 +212,6 @@ public class DobleExposicion extends AppCompatActivity {
         miImagen.setEstado(3);
 
          */
-
-        miImagen.addVersion(gpuImage.getBitmapWithFilterApplied());
 
     }
 

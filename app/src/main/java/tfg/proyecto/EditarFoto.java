@@ -75,6 +75,9 @@ public class EditarFoto extends AppCompatActivity {
     public FloatingActionButton botonRehacer;
     public FloatingActionButton botonDeshacer;
     public FloatingActionButton botonVerEdiciones;
+    public FloatingActionButton botonInfo;
+
+    GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
 
     int contadorbyn = 0;
 
@@ -116,7 +119,6 @@ public class EditarFoto extends AppCompatActivity {
     public Boolean esfera = false;
 
     Button botonCapas;
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,6 +284,7 @@ public class EditarFoto extends AppCompatActivity {
         textViewExpo      = new TextView(this);
         textViewContraste = new TextView(this);
         textViewSom       = new TextView(this);
+        textViewBri       = new TextView(this);
         textViewLuces     = new TextView(this);
         textViewSat       = new TextView(this);
         textViewViv       = new TextView(this);
@@ -981,6 +984,7 @@ public class EditarFoto extends AppCompatActivity {
         dobleExpo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                miImagen.setBitmapActual(gpuImage.getBitmapWithFilterApplied());
                 Intent intent = new Intent(view.getContext(), DobleExposicion.class);
                 startActivity(intent);
             }
@@ -990,7 +994,7 @@ public class EditarFoto extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 miImagen.addVersion(gpuImage.getBitmapWithFilterApplied());
-                Toast.makeText(getBaseContext(), "Se ha añadido una nueva capa", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Se ha añadido una nueva versión", Toast.LENGTH_SHORT).show();
                 botonDeshacer.setEnabled(true);
                 botonDeshacer.setAlpha(1.0f);
             }
@@ -1101,6 +1105,17 @@ public class EditarFoto extends AppCompatActivity {
             }
         });
 
+        botonInfo = findViewById(R.id.botonInfo);
+        botonInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse("https://uretouch6.wordpress.com/");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     public void saveImage(){
@@ -1181,11 +1196,14 @@ public class EditarFoto extends AppCompatActivity {
         filterGroup.addFilter(filtroContraste);
         filterGroup.addFilter(filtroSombras);
         filterGroup.addFilter(filtroLuces);
+        filterGroup.addFilter(filtroBrillo);
         filterGroup.addFilter(filtroNit);
         filterGroup.addFilter(filtroSat);
         filterGroup.addFilter(filtroGausiano);
         filterGroup.addFilter(filtroVivacidad);
         filterGroup.addFilter(filtroGamma);
+
+
 
         if (esfera == true){
             filterGroup.addFilter(filtroEsfera);
