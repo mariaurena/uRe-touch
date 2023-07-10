@@ -62,9 +62,6 @@ public class DobleExposicion extends AppCompatActivity {
 
     public SeekBar seekbarBlend;
 
-    public static final int REQUEST_WRITE_STORAGE = 111;
-    public static final int REQUEST_READ_STORAGE = 222;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,7 +154,7 @@ public class DobleExposicion extends AppCompatActivity {
         startActivityForResult(galeria,2);
     }
 
-    // para el resultado de la actividad
+    // para el resultado del intent
     protected void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // galeria
@@ -206,35 +203,10 @@ public class DobleExposicion extends AppCompatActivity {
 
         gpuImage.setFilter(filterGroup);
 
-        /*
-
-        miImagen.setBitmapEditada(gpuImage.getBitmapWithFilterApplied());
-        miImagen.setEstado(3);
-
-         */
-
     }
 
     protected float range(final float percentage, final float start, final float end) {
         return (end - start) * percentage / 100.0f + start;
-    }
-
-    // manejamos la petición de dichos permisos
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQUEST_WRITE_STORAGE || requestCode == REQUEST_READ_STORAGE) {
-            // Verificar si los permisos fueron concedidos
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso concedido, realizar la acción deseada
-                Log.e("P","PERMISO CONCEDIDO");
-
-            } else {
-                // Permiso denegado, mostrar un mensaje al usuario o deshabilitar la función
-                Log.e("P","PERMISO DENEGADO");
-            }
-        }
     }
 
 

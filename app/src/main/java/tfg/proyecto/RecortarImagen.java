@@ -203,14 +203,8 @@ public class RecortarImagen extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                /*
-
-                miImagen.setBitmapRecortada(bitmapRecortada);
-                miImagen.setEstado(2);
-
-                 */
-
                 miImagen.addVersion(bitmapRecortada);
+                miImagen.addEdicion("Transformacion");
                 startActivity(intent);
 
             }

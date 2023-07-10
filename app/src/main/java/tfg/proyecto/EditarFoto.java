@@ -65,11 +65,8 @@ public class EditarFoto extends AppCompatActivity {
 
     public Bitmap imageBitMap;
 
-    private DrawerLayout drawerLayout;
-
     public FloatingActionButton botonRecortar;
     public FloatingActionButton botonGuardar;
-    public FloatingActionButton dobleExposicion;
     public FloatingActionButton botonImportar;
 
     public FloatingActionButton botonRehacer;
@@ -77,9 +74,19 @@ public class EditarFoto extends AppCompatActivity {
     public FloatingActionButton botonVerEdiciones;
     public FloatingActionButton botonInfo;
 
-    GPUImageFilterGroup filterGroup = new GPUImageFilterGroup();
-
     int contadorbyn = 0;
+
+    boolean expos = false;
+    boolean contr = false;
+    boolean sombr = false;
+    boolean luc   = false;
+    boolean brill = false;
+    boolean satur = false;
+    boolean vivac = false;
+    boolean gamm  = false;
+    boolean nitid = false;
+    boolean gauss = false;
+    boolean esfer = false;
 
     TabLayout tabs;
 
@@ -336,8 +343,6 @@ public class EditarFoto extends AppCompatActivity {
         tabs.clearOnTabSelectedListeners();
         tabs.selectTab(null);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
-
         LinearLayout menuLayout = findViewById(R.id.menuLayout);
 
         menuLayout.removeAllViews();
@@ -481,6 +486,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewExpo.setText("" + i);
                             filtroExposición.setExposure(range(i, -0.7f, 2.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                expos = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -500,6 +508,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewExpo.setText("" + i);
                             filtroExposición.setExposure(range(i, -0.7f, 2.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                expos = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -526,6 +537,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewContraste.setText("" + i);
                             filtroContraste.setContrast(range(i,0.0f,4.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                contr = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -545,6 +559,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewContraste.setText("" + i);
                             filtroContraste.setContrast(range(i,0.0f,4.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                contr = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -570,6 +587,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewSom.setText("" + i);
                             filtroSombras.setShadows(range(i,0.0f,1.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                sombr = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -589,6 +609,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewSom.setText("" + i);
                             filtroSombras.setShadows(range(i,0.0f,1.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                sombr = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -614,6 +637,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewLuces.setText("" + i);
                             filtroLuces.setHighlights(range(i,1.0f,0.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                luc = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -633,6 +659,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewLuces.setText("" + i);
                             filtroLuces.setHighlights(range(i,1.0f,0.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                luc = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -658,6 +687,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewBri.setText("" + i);
                             filtroBrillo.setBrightness(range(i,-0.2f,0.8f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                brill = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -677,6 +709,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewBri.setText("" + i);
                             filtroBrillo.setBrightness(range(i,-0.2f,0.8f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                brill = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -702,6 +737,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewSat.setText("" + i);
                             filtroSat.setSaturation(range(i,0.0f,2.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                satur = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -721,6 +759,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewSat.setText("" + i);
                             filtroSat.setSaturation(range(i,0.0f,2.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                satur = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -746,6 +787,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewNit.setText("" + i);
                             filtroNit.setSharpness(range(i,-4.0f,4.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                nitid = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -765,6 +809,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewNit.setText("" + i);
                             filtroNit.setSharpness(range(i,-4.0f,4.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                nitid = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -790,6 +837,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewGau.setText("" + i);
                             filtroGausiano.setBlurSize(range(i,0.0f,8.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                gauss = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -809,6 +859,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewGau.setText("" + i);
                             filtroGausiano.setBlurSize(range(i,0.0f,8.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                gauss = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -834,6 +887,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewViv.setText("" + i);
                             filtroVivacidad.setVibrance(range(i,-1.2f,1.2f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                vivac = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -853,6 +909,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewViv.setText("" + i);
                             filtroVivacidad.setVibrance(range(i,-1.2f,1.2f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                vivac = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -878,6 +937,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewGamma.setText("" + i);
                             filtroGamma.setGamma(range(i,0.0f,3.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                gamm = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -897,6 +959,9 @@ public class EditarFoto extends AppCompatActivity {
                             textViewGamma.setText("" + i);
                             filtroGamma.setGamma(range(i,0.0f,3.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                gamm = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -931,6 +996,9 @@ public class EditarFoto extends AppCompatActivity {
                                 filtroEsfera.setRadius(0.5f);
                                 filtroEsfera.setRefractiveIndex(range(i,0.0f,1.0f));
                                 aplicarFiltros();
+                                if (seekBar.getProgress() != 50){
+                                    esfer = true;
+                                }
                                 gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                                 gpuImageView.requestRender();
                             }
@@ -952,6 +1020,9 @@ public class EditarFoto extends AppCompatActivity {
                             filtroEsfera.setRadius(0.5f);
                             filtroEsfera.setRefractiveIndex(range(i,0.0f,1.0f));
                             aplicarFiltros();
+                            if (seekBar.getProgress() != 50){
+                                esfer = true;
+                            }
                             gpuImageView.setImage(gpuImage.getBitmapWithFilterApplied());
                             gpuImageView.requestRender();
                         }
@@ -994,7 +1065,44 @@ public class EditarFoto extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 miImagen.addVersion(gpuImage.getBitmapWithFilterApplied());
+                if (expos == true){
+                    miImagen.addEdicion("Exposicion");
+                }
+                if (contr == true){
+                    miImagen.addEdicion("Contraste");
+                }
+                if (sombr == true){
+                    miImagen.addEdicion("Sombras");
+                }
+                if (luc == true){
+                    miImagen.addEdicion("Luces");
+                }
+                if (brill == true){
+                    miImagen.addEdicion("Brillo");
+                }
+                if (nitid == true){
+                    miImagen.addEdicion("Nitidez");
+                }
+                if (satur == true){
+                    miImagen.addEdicion("Saturación");
+                }
+                if (gauss == true){
+                    miImagen.addEdicion("Gaussiano");
+                }
+                if (vivac == true){
+                    miImagen.addEdicion("Vivacidad");
+                }
+                if (gamm == true){
+                    miImagen.addEdicion("Gamma");
+                }
+                if (esfera == true){
+                    miImagen.addEdicion("Esfera");
+                }
+                if (byn == true){
+                    miImagen.addEdicion("Blanco y negro");
+                }
                 Toast.makeText(getBaseContext(), "Se ha añadido una nueva versión", Toast.LENGTH_SHORT).show();
+                resetearEdiciones();
                 botonDeshacer.setEnabled(true);
                 botonDeshacer.setAlpha(1.0f);
             }
@@ -1231,6 +1339,19 @@ public class EditarFoto extends AppCompatActivity {
         seekbarNit.setProgress(50);
         seekbarGau.setProgress(50);
         seekbarEsf.setProgress(0);
+    }
+    public void resetearEdiciones(){
+        expos = false;
+        contr = false;
+        sombr = false;
+        luc   = false;
+        brill = false;
+        satur = false;
+        vivac = false;
+        gamm  = false;
+        nitid = false;
+        gauss = false;
+        esfer = false;
     }
 
 }

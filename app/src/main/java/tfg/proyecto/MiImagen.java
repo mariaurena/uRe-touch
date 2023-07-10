@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MiImagen {
@@ -12,6 +13,12 @@ public class MiImagen {
     // guardamos el historial de versiones de la edición
     private static ArrayList<Bitmap> historial = new ArrayList<>();
     static private int nVersion = -1;
+
+    // guardamos las ediciones que componen cada version
+    static int MAX_FILAS = 100;
+    static int MAX_COLS  = 100;
+    static private int nEdicion = -1;
+    private static String ediciones[][] = new String[MAX_FILAS][MAX_COLS];
 
     public static Boolean bajaEficiencia = false;
 
@@ -51,6 +58,12 @@ public class MiImagen {
         listarBitmaps("addVersion");
     }
 
+    public void addEdicion(String edicion){
+        nEdicion++;
+        ediciones[nVersion][getNumeroEdiciones(nVersion)] = edicion;
+        Log.e("numero de edicion",String.valueOf(nEdicion));
+    }
+
     public void eliminarVersionesSiguientesA(int version){
         for (int i = historial.size() - 1; i > version; i--) {
             Log.e("eliminando v", String.valueOf(i));
@@ -67,6 +80,27 @@ public class MiImagen {
         return historial.get(i);
     }
 
+    public ArrayList<String> getEdiciones(int version){
+        ArrayList<String> a_devolver = new ArrayList<>();
+        for (int i=0 ; i<nEdicion ; i++){
+            a_devolver.add(ediciones[version][i]);
+        }
+        return a_devolver;
+    }
+
+    public int getNumeroEdiciones(int version){
+        int contador = 0;
+        for (int i = 0 ; i<MAX_COLS ; i++){
+            if (ediciones[version][i] != null){
+                contador++;
+            }
+        }
+        return contador;
+    }
+    public String getEdicion(int version,int edicion){
+        return ediciones[version][edicion];
+    }
+
     public int getVersionActual(){
         return this.nVersion;
     }
@@ -81,6 +115,14 @@ public class MiImagen {
         }
         historial = new ArrayList<>();
         nVersion = -1;
+    }
+
+    public void resetearEdiciones(){
+        for (int i = 0 ; i<MAX_FILAS ; i++){
+            for (int j=0 ; j<MAX_COLS ; j++){
+                ediciones[i][j] = null;
+            }
+        }
     }
 
     private void listarBitmaps( String message )

@@ -32,16 +32,6 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"/>
 
-
-            <!--<androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="100dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"/>
-                -->
-
             <com.github.clans.fab.FloatingActionMenu
                 android:id="@+id/menuAjustes"
                 android:layout_width="50dp"
@@ -199,7 +189,6 @@
             android:layout_height="0dp"
             android:layout_weight="0.08"
             android:orientation="horizontal">
-
 
         </LinearLayout>
 

@@ -207,7 +207,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             miImagen.resetearVersiones();
+            miImagen.resetearEdiciones();
             miImagen.addVersion(imageBitmap);
+            miImagen.addEdicion("Original");
 
             startActivity(intent);
         }
@@ -228,14 +230,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
             miImagen.resetearVersiones();
+            miImagen.resetearEdiciones();
             miImagen.addVersion(imageBitmap);
+            miImagen.addEdicion("Original");
 
             startActivity(intent);
         }
     }
 
     // usaremos un archivo temporal para almacenar la imagen capturada con la cámara
-    // para que no pierda calidad al intentar mostrarla en la ImageView se ShowImage
+    // para que no pierda calidad al intentar mostrarla en la ImageView de ShowImage
     private File createImageFile() throws IOException {
         // Crear un archivo temporal con un nombre único
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
